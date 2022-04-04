@@ -1,0 +1,10 @@
+Projekt będzie służyć do zarządzania firmą budowlaną
+W projekcie chce skożystać ze Spring Boota i Spring Secourity
+Krótki opis:
+Użytkownicy będą podzieleni na dwa typy: User i Admin
+W zależności kto się zaloguje zostanie przesunięty na inny ekran startowy
+User będzie mógł wpisać w jakim dniu, ile godzin pracował na jakiej Inwestycji
+Te godziny będą zliczane i będą doliczane do kosztów Inwestycji
+Admin będzie mógł dodać użytkownika, inwestycje, dostawcę, podwykonawce
+Admin będzie przyporządkowywał danego dostawce i podwykonawce do Inwestycji
+Godziny wpisane przez Usera, koszty dostawców i podwykonawców będą się sumować i na ich podstawie będzie liczona marżowość inwestycji.
