@@ -8,7 +8,7 @@
 <form action="/user/workingtime" th:object="${workingTime}" method="post">
     <p>Użytkownik: <input type="text" th:field="*{user}" /></p>
     <p>Data: <input type="date" th:field="*{localDate}" /></p>
-    <p>Inwestycja: <select th:field="*{investity}"> </select></p>
+    <p>Inwestycja: <select th:value="*{investity}" th:field="*{investity}"> </select></p>
     <p>Liczba godzin: <input type="number" th:field="*{numberOfHours}"/></p>
     <p><input type="submit" value="Submit" /></p>
 </form>

@@ -1,5 +1,7 @@
 package pl.coderslab.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -26,6 +28,7 @@ public class WorkingTime {
     @NotNull
     private int numberOfHours;
 
+    @DateTimeFormat (pattern = "yyyy-MM-dd")
     private LocalDate localDate;
 
     public long getId() {
