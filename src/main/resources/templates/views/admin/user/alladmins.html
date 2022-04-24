@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Admini</title>
+</head>
+<body>
+<h2>Admini</h2>
+<table>
+  <tr>
+    <th>L.p</th>
+    <th>Login</th>
+    <th>Imię</th>
+    <th>Nazwisko</th>
+    <th>E-mail</th>
+    <th>Numer telefonu</th>
+    <th>Akcja</th>
+  </tr>
+  <tr th:each="user : ${admins}">
+    <td><span th:text="${user.getId()}">Id</span></td>
+    <td><span th:text="${user.getUsername()}">Login</span></td>
+    <td><span th:text="${user.getFirstName()}">Name</span></td>
+    <td><span th:text="${user.getLastName()}">Surname</span></td>
+    <td><span th:text="${user.getEmail()}">Email</span></td>
+    <td><span th:text="${user.getPhoneNumber()}">PhoneNumber</span></td>
+    <td><a th:href="@{/admin/user/edit?id={id}(id=${user.getId()})}">Edytuj</a>
+      <a th:href="@{/admin/user/delete?id={id}(id=${user.getId()})}">Usuń</a>
+      <a th:href="@{/admin/user/info?id={id}(id=${user.getId()})}">Szczegóły</a></td>
+  </tr>
+</table>
+<p><h5>Dashboard: <a href="/admin/dashboard">Dashboard</a></h5></p>
+</body>
+</html>

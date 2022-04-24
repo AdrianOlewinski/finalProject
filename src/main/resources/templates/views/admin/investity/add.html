@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dodaj inwestycję</title>
+</head>
+<body>
+<form action="/admin/investity/add" th:object="${investity}" method="post">
+    <p>Nazwa: <input type="text" th:field="*{investityName}" /></p>
+    <p>Budżet: <input type="number" th:field="*{budget}" /></p>
+    <p><input type="submit" value="Submit"/></p>
+</form>
+<p><h3><a href="/admin/investity/all">Powrót</a></h3></p>
+
+</body>
+</html>

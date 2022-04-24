@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edytuj dostawcę</title>
+</head>
+<body>
+<form action="/admin/supplier/edit" th:object="${supplier}" method="post">
+    <input type="hidden" th:field="*{id}">
+    <p>Nazwa: <input type="text" th:field="*{name}" /></p>
+    <p><input type="submit" value="Submit"/></p>
+</form>
+<p><h3><a href="/admin/supplier/all">Powrót</a></h3></p>
+
+</body>
+</html>

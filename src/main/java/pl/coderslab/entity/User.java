@@ -3,6 +3,7 @@ package pl.coderslab.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -10,7 +11,6 @@ import java.util.Set;
 @Entity
 @Table (name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -32,6 +32,12 @@ public class User {
     private String lastName;
 
     private int phoneNumber;
+
+    @NotNull
+    private int active;
+
+    @NotNull
+    private int salaryPerHours;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
@@ -112,6 +118,22 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public int getSalaryPerHours() {
+        return salaryPerHours;
+    }
+
+    public void setSalaryPerHours(int salaryPerHours) {
+        this.salaryPerHours = salaryPerHours;
     }
 
     @Override
