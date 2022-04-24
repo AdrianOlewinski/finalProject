@@ -5,13 +5,15 @@
     <title>Godziny pracy</title>
 </head>
 <body>
-<form action="/user/workingtime" th:object="${workingTime}" method="post">
-    <p>Użytkownik: <input type="text" th:field="*{user}" /></p>
+<form action="/user/workingtime/add" th:object="${workingTime}" method="post">
     <p>Data: <input type="date" th:field="*{localDate}" /></p>
-    <p>Inwestycja: <select th:value="*{investity}" th:field="*{investity}"> </select></p>
+    <p>Inwestycja: <select th:field="*{investity}">
+        <option th:each="option : ${investity}" th:value="${option.getId()}" th:text="${option.getInvestityName()}"></option>
+    </select></p>
     <p>Liczba godzin: <input type="number" th:field="*{numberOfHours}"/></p>
     <p><input type="submit" value="Submit" /></p>
 </form>
+<p><h3>Powrót: <a href="/user/workingtime/all">Wszystkie</a></h3></p>
 
 </body>
 </html>

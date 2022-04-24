@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wszystkie godziny</title>
+</head>
+<body>
+<h2>Wszytkie godziny</h2>
+<table>
+    <tr>
+        <th>L.p</th>
+        <th>Data</th>
+        <th>Inwestycja</th>
+        <th>Liczba godzin</th>
+        <th>Akcja</th>
+    </tr>
+    <tr th:each="workingTime : ${allworkingtime}">
+        <td><span th:text="${workingTime.getId()}">Id</span></td>
+        <td><span th:text="${workingTime.getLocalDate()}">Date</span></td>
+        <td><span th:text="${workingTime.getInvestity().getInvestityName()}">Investity</span></td>
+        <td><span th:text="${workingTime.getNumberOfHours()}">Number of Hours</span></td>
+        <td><a th:href="@{/user/workingtime/edit?id={id}(id=${workingTime.getId()})}">Edytuj</a>
+            <a th:href="@{/user/workingtime/delete?id={id}(id=${workingTime.getId()})}" th:oncl>Usuń</a></td>
+    </tr>
+</table>
+<p><h5>Dashboard: <a href="/user/dashboard">Dashboard</a></h5></p>
+</body>
+</html>

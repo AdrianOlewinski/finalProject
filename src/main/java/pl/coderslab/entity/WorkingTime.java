@@ -22,7 +22,7 @@ public class WorkingTime {
 
     @ManyToOne
     @JoinColumn (name = "id_investity")
-    @NotNull
+//    @NotNull
     private Investity investity;
 
     @NotNull
@@ -69,5 +69,16 @@ public class WorkingTime {
 
     public void setLocalDate(LocalDate localDate) {
         this.localDate = localDate;
+    }
+
+    @Override
+    public String toString() {
+        return "WorkingTime{" +
+                "id=" + id +
+                ", user=" + user.getUsername() +
+                ", investity=" + investity.getInvestityName() +
+                ", numberOfHours=" + numberOfHours +
+                ", localDate=" + localDate +
+                '}';
     }
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Godziny pracy</title>
+</head>
+<body>
+<p> Data: <span th:text="${workingTime.getLocalDate()}"></span></p>
+<form action="/user/workingtime/edit" th:object="${workingTime}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+    <input type="hidden" th:field="*{localDate}"/>
+    <p>Inwestycja: <select th:field="*{investity}">
+        <option th:each="option : ${investity}" th:value="${option.getId()}" th:text="${option.getInvestityName()}"></option>
+    </select></p>
+    <p>Liczba godzin: <input type="number" th:field="*{numberOfHours}"/></p>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+<p><h3>Powrót: <a href="/user/workingtime/all">Wszystkie</a></h3></p>
+
+</body>
+</html>

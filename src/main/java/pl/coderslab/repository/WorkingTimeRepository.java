@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface WorkingTimeRepository extends JpaRepository <WorkingTime, Long> {
     List<WorkingTime> findAllByInvestity_IdAndUser_Id (long investityId, long userId);
+    List<WorkingTime> findAllByUser_IdOrderByLocalDateAsc (long userId);
+//    WorkingTime findById(long id);
 }

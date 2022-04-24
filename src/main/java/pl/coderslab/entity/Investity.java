@@ -49,4 +49,13 @@ public class Investity {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @Override
+    public String toString() {
+        return "Investity{" +
+                "id=" + id +
+                ", investityName='" + investityName + '\'' +
+                ", budget=" + budget +
+                '}';
+    }
 }
