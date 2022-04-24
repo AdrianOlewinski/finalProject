@@ -44,11 +44,24 @@ public class UserController {
 
     @Secured("ROLE_USER")
     @PostMapping(path = "user/editdata")
-    @ResponseBody
-        String userEditData(@ModelAttribute User user, @RequestParam long id, @RequestParam String username){
-        return id + username;
-//        userService.update(user);
-//        return "redirect:/user/dashboard";
+        String userEditData(@ModelAttribute User user){
+        userService.update(user);
+        return "redirect:/user/dashboard";
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(path = "user/editpassword")
+    String userEditPassword(){
+        return "user/edit/editpassword";
+    }
+
+    @Secured("ROLE_USER")
+    @PostMapping(path = "user/editpassword")
+    String userEditPassword(@AuthenticationPrincipal CurrentUser currentUser, @RequestParam String oldPass,
+                            @RequestParam String newPass1, @RequestParam String newPass2){
+        User user = currentUser.getUser();
+        userService.changePassword(user,oldPass,newPass1,newPass2);
+        return "redirect:/user/dashboard";
     }
 
 

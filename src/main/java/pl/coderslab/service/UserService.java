@@ -9,10 +9,7 @@ import pl.coderslab.entity.User;
 import pl.coderslab.repository.RoleReposiotry;
 import pl.coderslab.repository.UserRepository;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -22,7 +19,7 @@ public class UserService {
     private final UserRepository userReposiotry;
     private final RoleReposiotry roleReposiotry;
     private final BCryptPasswordEncoder passwordEncoder;
-    
+
 
     public UserService(UserRepository userReposiotry, RoleReposiotry roleReposiotry, BCryptPasswordEncoder passwordEncoder) {
         this.userReposiotry = userReposiotry;
@@ -34,12 +31,24 @@ public class UserService {
         return userReposiotry.findAll();
     }
 
-    User findByUsername(String login) { return userReposiotry.findByUsername(login); };
+    public User findByUsername(String login) { return userReposiotry.findByUsername(login); };
 
     public Optional<User> findByUserId (Long id) { return userReposiotry.findById(id); };
 
     public void update (User user){
+        String password = userReposiotry.findById(user.getId()).get().getPassword();
+        user.setPassword(password);
         userReposiotry.save(user);
+    }
+
+    public void changePassword (User user, String oldPass, String newPass1, String newPass2){
+        String password = userReposiotry.findById(user.getId()).get().getPassword();;
+        if(passwordEncoder.matches(oldPass,password) && newPass1.equals(newPass2)){
+                user.setPassword(passwordEncoder.encode(newPass1));
+                userReposiotry.save(user);
+            }else{
+            System.out.println("Niepoprawne stare hasło lub nowe hasła się nie zgadzają");
+        }
     }
 
 //    public void saveuser (User user){
