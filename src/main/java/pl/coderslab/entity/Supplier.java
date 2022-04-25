@@ -11,6 +11,10 @@ public class Supplier {
 
     private String name;
 
+    private String type;
+
+    private String description;
+
     public long getId() {
         return id;
     }
@@ -27,11 +31,29 @@ public class Supplier {
         this.name = name;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "Supplier{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

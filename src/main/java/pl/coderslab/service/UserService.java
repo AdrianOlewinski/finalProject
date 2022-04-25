@@ -37,9 +37,9 @@ public class UserService {
     public void updateByUser(User user){
         String password = userReposiotry.findById(user.getId()).get().getPassword();
         user.setPassword(password);
+        Role userRole = roleReposiotry.findByName("ROLE_USER");
+        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         userReposiotry.save(user);
-        //        Role userRole = roleReposiotry.findByName("ROLE_USER");
-//        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
     }
 
     public void changePassword (User user, String oldPass, String newPass1, String newPass2){
@@ -71,14 +71,12 @@ public class UserService {
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);
-        user.setActive(1);
         userReposiotry.save(user);
     }
 
     public void editUserByAdmin(User user){
         String password = userReposiotry.findById(user.getId()).get().getPassword();
         user.setPassword(password);
-        user.setActive(1);
         userReposiotry.save(user);
     }
 
@@ -88,7 +86,6 @@ public class UserService {
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.get().setRoles(roles);
-        user.get().setActive(0);
     }
 
 }

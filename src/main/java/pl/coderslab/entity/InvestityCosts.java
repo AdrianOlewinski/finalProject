@@ -3,10 +3,10 @@ package pl.coderslab.entity;
 import javax.persistence.*;
 
 @Entity
-public class SupplierInvestity {
+public class InvestityCosts {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne

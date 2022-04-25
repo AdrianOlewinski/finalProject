@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Szczegóły inwestycji</title>
+</head>
+<body>
+<h2>Podsumowanie</h2>
+<h3><span th:text="${investity.getInvestityName()}"/></h3>
+<h3>Budżet: <span th:text="${investity.getBudget()}"/> zł</h3>
+<h3>Koszty: <span th:text="${sumOdAllCosts}"/> zł</h3>
+<h3>Marża: <span th:text="${margin}"/> %</h3>
+<h2>Koszty Inwestycji</h2>
+<table>
+    <tr>
+        <th>L.p</th>
+        <th>Typ</th>
+        <th>Nazwa</th>
+        <th>Koszt</th>
+        <th>Opis</th>
+        <th>Akcja</th>
+    </tr>
+    <tr th:each="investityCost : ${investityCosts}">
+        <td><span th:text="${investityCost.getId()}"/></td>
+        <td><span th:text="${investityCost.getSuplier().getType()}"/></td>
+        <td><span th:text="${investityCost.getSuplier().getName()}"/></td>
+        <td><span th:text="${investityCost.getCost()}"/></td>
+        <td><span th:text="${investityCost.getDescription()}"/></td>
+        <td><a th:href="@{/admin/investity/info/editsupplier?id={id}(id=${investityCost.getId()})}">Edytuj</a>
+            <a th:href="@{/admin/investity/info/deletesupplier?id={id}(id=${investityCost.getId()})}">Usuń</a>
+    </tr>
+</table>
+<h4><a th:href="@{/admin/investity/info/addsupplier}">Dodaj nowy koszt</a></h4>
+<p><h5>Dashboard: <a href="/admin/dashboard">Dashboard</a></h5></p>
+</body>
+</html>

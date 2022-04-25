@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.coderslab.entity.Investity;
+import pl.coderslab.entity.InvestityCosts;
 import pl.coderslab.entity.Supplier;
 import pl.coderslab.repository.InvestityRepository;
+import pl.coderslab.service.InvestityCostsService;
 import pl.coderslab.service.InvestityService;
 import pl.coderslab.service.SupplierService;
+import pl.coderslab.service.WorkingTimeService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -21,10 +25,16 @@ public class InvestityController {
 
     private final InvestityService investityService;
     private final SupplierService supplierService;
+    private final WorkingTimeService workingTimeService;
+    private final InvestityCostsService investityCostsService;
 
-    public InvestityController(InvestityService investityService, SupplierService supplierService) {
+
+    public InvestityController(InvestityService investityService, SupplierService supplierService,
+                               WorkingTimeService workingTimeService, InvestityCostsService investityCostsService) {
         this.investityService = investityService;
         this.supplierService = supplierService;
+        this.workingTimeService = workingTimeService;
+        this.investityCostsService = investityCostsService;
     }
 
     @GetMapping(path = "admin/investity/add")
@@ -46,7 +56,11 @@ public class InvestityController {
     @Secured("ROLE_ADMIN")
     String showAllInvestities(Model model){
         List<Investity> investities = investityService.findAll();
+        Map<Long,Integer> allCosts = investityService.getAllCosts();
+        Map<Long,Double> allMargins = investityService.getAllMargins();
         model.addAttribute("investities",investities);
+        model.addAttribute("allCosts", allCosts);
+        model.addAttribute("allMargins",allMargins);
         return "admin/investity/all";
     }
 
@@ -70,5 +84,19 @@ public class InvestityController {
     String deleteInvestity(@RequestParam long id){
         investityService.deleteInvestityById(id);
         return "redirect:/admin/investity/all";
+    }
+
+    @GetMapping(path = "admin/investity/info")
+    @Secured("ROLE_ADMIN")
+    String showInfo(@RequestParam long id, Model model){
+        Optional <Investity> investity = investityService.findById(id);
+        List<InvestityCosts> investityCosts = investityCostsService.findAllByInvestityId(id);
+        int sumOfCosts = investityCostsService.sumOfAllInvestityCosts(id);
+        double margin = investityService.getInvestityMargin(id);
+        model.addAttribute("investity",investity.get());
+        model.addAttribute("investityCosts",investityCosts);
+        model.addAttribute("sumOdAllCosts",sumOfCosts);
+        model.addAttribute("margin",margin);
+        return "admin/investity/info";
     }
 }

@@ -16,11 +16,11 @@
         <th>Akcja</th>
     </tr>
     <tr th:each="investity : ${investities}">
-        <td><span th:text="${investity.getId()}">Id</span></td>
-        <td><span th:text="${investity.getInvestityName()}">Name</span></td>
-        <td><span th:text="${investity.getBudget()}">Budget</span></td>
-        <td><span th:text="Koszty">Cost</span></td>
-        <td><span th:text="Marża">Margin</span></td>
+        <td><span th:text="${investity.getId()}"/></td>
+        <td><span th:text="${investity.getInvestityName()}"/></td>
+        <td><span th:text="${investity.getBudget()}"/></td>
+        <td><span th:text="${allCosts.get(investity.getId())}"/></td>
+        <td><span th:text="${allMargins.get(investity.getId())}"/></td>
         <td><a th:href="@{/admin/investity/edit?id={id}(id=${investity.getId()})}">Edytuj</a>
             <a th:href="@{/admin/investity/delete?id={id}(id=${investity.getId()})}">Usuń</a>
             <a th:href="@{/admin/investity/info?id={id}(id=${investity.getId()})}">Szczegóły</a></td>

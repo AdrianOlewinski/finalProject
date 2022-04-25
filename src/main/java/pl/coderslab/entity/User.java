@@ -34,9 +34,6 @@ public class User {
     private int phoneNumber;
 
     @NotNull
-    private int active;
-
-    @NotNull
     private int salaryPerHours;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -120,13 +117,6 @@ public class User {
         this.roles = roles;
     }
 
-    public int getActive() {
-        return active;
-    }
-
-    public void setActive(int active) {
-        this.active = active;
-    }
 
     public int getSalaryPerHours() {
         return salaryPerHours;

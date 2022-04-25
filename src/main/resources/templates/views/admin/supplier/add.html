@@ -2,11 +2,16 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Dodaj dostawcę</title>
+    <title>Dodaj dostawcę/podwykonawcę</title>
 </head>
 <body>
 <form action="/admin/supplier/add" th:object="${supplier}" method="post">
     <p>Nazwa: <input type="text" th:field="*{name}" /></p>
+    <p>Typ: <select type="text" th:field="*{type}">
+        <option th:value="Dostawca">Dostawca</option>
+        <option th:value="Podwykonawca">Podwykonawca</option>
+    </select></p>
+    <p>Opis: <input type="text" th:field="*{description}"></p>
     <p><input type="submit" value="Submit"/></p>
 </form>
 <p><h3><a href="/admin/supplier/all">Powrót</a></h3></p>

@@ -10,11 +10,15 @@
     <tr>
         <th>L.p</th>
         <th>Nazwa</th>
+        <th>Typ</th>
+        <th>Opis</th>
         <th>Akcja</th>
     </tr>
     <tr th:each="supplier : ${suppliers}">
-        <td><span th:text="${supplier.getId()}">Id</span></td>
-        <td><span th:text="${supplier.getName()}">Name</span></td>
+        <td><span th:text="${supplier.getId()}"/></td>
+        <td><span th:text="${supplier.getName()}"/></td>
+        <td><span th:text="${supplier.getType()}"/></td>
+        <td><span th:text="${supplier.getDescription()}"/></td>
         <td><a th:href="@{/admin/supplier/edit?id={id}(id=${supplier.getId()})}">Edytuj</a>
             <a th:href="@{/admin/supplier/delete?id={id}(id=${supplier.getId()})}">Usuń</a></td>
     </tr>

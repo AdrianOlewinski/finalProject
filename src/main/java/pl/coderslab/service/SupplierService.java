@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.coderslab.entity.Supplier;
 import pl.coderslab.repository.InvestityRepository;
-import pl.coderslab.repository.SupplierInvestityRepository;
+import pl.coderslab.repository.InvestityCostsRepository;
 import pl.coderslab.repository.SupplierRepository;
 
 import java.util.List;
@@ -15,13 +15,13 @@ import java.util.Optional;
 @Transactional
 public class SupplierService {
     private final SupplierRepository supplierRepository;
-    private final SupplierInvestityRepository supplierInvestityRepository;
+    private final InvestityCostsRepository InvestityCostsRepository;
     private final InvestityRepository investityRepository;
 
-    public SupplierService(SupplierRepository supplierRepository, SupplierInvestityRepository supplierInvestityRepository,
+    public SupplierService(SupplierRepository supplierRepository, InvestityCostsRepository InvestityCostsRepository,
                            InvestityRepository investityRepository) {
         this.supplierRepository = supplierRepository;
-        this.supplierInvestityRepository = supplierInvestityRepository;
+        this.InvestityCostsRepository = InvestityCostsRepository;
         this.investityRepository = investityRepository;
     }
 

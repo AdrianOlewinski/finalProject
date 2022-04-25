@@ -33,9 +33,12 @@ public class WorkingTimeController {
 
     @Secured("ROLE_USER")
     @GetMapping (path = "user/workingtime/add")
-    String addNewWorkingTime(Model model){
+    String addNewWorkingTime(Model model, @AuthenticationPrincipal CurrentUser currentUser){
+        User user = currentUser.getUser();
         WorkingTime workingTime = new WorkingTime();
         workingTime.setLocalDate(LocalDate.now());
+        workingTime.setNumberOfHours(10);
+        workingTime.setInvestity(workingTimeService.findLatestInvestity(user.getId()));
         model.addAttribute("workingTime", workingTime);
         return "user/workingtime/add";
     }
