@@ -10,6 +10,7 @@ import pl.coderslab.entity.CurrentUser;
 import pl.coderslab.entity.Investity;
 import pl.coderslab.entity.User;
 import pl.coderslab.entity.WorkingTime;
+import pl.coderslab.exception.WorkingTimeNotFoundException;
 import pl.coderslab.service.InvestityService;
 import pl.coderslab.service.UserService;
 import pl.coderslab.service.WorkingTimeService;
@@ -49,6 +50,7 @@ public class WorkingTimeController {
                              @AuthenticationPrincipal CurrentUser currentUser){
         User user = currentUser.getUser();
         workingTime.setUser(user);
+        workingTime.setSalaryPerHours(user.getSalaryPerHours());
         workingTimeService.addNewWorkingTime(workingTime);
         return "user/dashboard";
     }
@@ -66,7 +68,7 @@ public class WorkingTimeController {
     @Secured("ROLE_USER")
     String editWorkingTime(@RequestParam long id, Model model){
         Optional<WorkingTime> workingTime = workingTimeService.findById(id);
-        model.addAttribute("workingTime", workingTime.get());
+        model.addAttribute("workingTime", workingTime.orElseThrow(()-> new WorkingTimeNotFoundException(id)));
         return "user/workingtime/edit";
     }
 
@@ -84,7 +86,7 @@ public class WorkingTimeController {
     @Secured("ROLE_USER")
     String deleteWorkingTime(@RequestParam long id){
         Optional<WorkingTime> workingTime = workingTimeService.findById(id);
-        workingTimeService.deleteById(workingTime.get().getId());
+        workingTimeService.deleteById(workingTime.orElseThrow(()-> new WorkingTimeNotFoundException(id)).getId());
         return "redirect:/user/workingtime/all";
     }
 

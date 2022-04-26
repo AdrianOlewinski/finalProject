@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dodaj koszt</title>
+</head>
+<body>
+<form action="/admin/investity/info/addcost" th:object="${investityCosts}" method="post">
+    <input type="hidden" th:field="*{investity}">
+    <p>Dostawca: <select th:field="*{suplier}">
+        <option th:each="option : ${suppliers}" th:value="${option.getId()}" th:text="${option.getName()}"></option>
+    </select> </p>
+    <p>Budżet: <input type="number" th:field="*{cost}" /></p>
+    <p>Opis: <input type="text" th:field="*{description}" /></p>
+    <p><input type="submit" value="Submit"/></p>
+</form>
+<p><h3><a href="/admin/investity/all">Powrót</a></h3></p>
+
+</body>
+</html>

@@ -9,6 +9,7 @@
 <form action="/user/workingtime/edit" th:object="${workingTime}" method="post">
     <input type="hidden" th:field="*{id}"/>
     <input type="hidden" th:field="*{localDate}"/>
+    <input type="hidden" th:field="*{salaryPerHours}">
     <p>Inwestycja: <select th:field="*{investity}">
         <option th:each="option : ${investity}" th:value="${option.getId()}" th:text="${option.getInvestityName()}"></option>
     </select></p>

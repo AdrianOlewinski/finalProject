@@ -8,9 +8,10 @@
 <h2>Podsumowanie</h2>
 <h3><span th:text="${investity.getInvestityName()}"/></h3>
 <h3>Budżet: <span th:text="${investity.getBudget()}"/> zł</h3>
-<h3>Koszty: <span th:text="${sumOdAllCosts}"/> zł</h3>
+<h3>Koszty dostawców/podwykonawców: <span th:text="${sumOfSuppliersCosts}"/> zł</h3>
+<h3>Koszty pracowników: <span th:text="${sumOfUserCosts}"/> zł</h3>
 <h3>Marża: <span th:text="${margin}"/> %</h3>
-<h2>Koszty Inwestycji</h2>
+<h2>Koszty Dostawców</h2>
 <table>
     <tr>
         <th>L.p</th>
@@ -26,11 +27,30 @@
         <td><span th:text="${investityCost.getSuplier().getName()}"/></td>
         <td><span th:text="${investityCost.getCost()}"/></td>
         <td><span th:text="${investityCost.getDescription()}"/></td>
-        <td><a th:href="@{/admin/investity/info/editsupplier?id={id}(id=${investityCost.getId()})}">Edytuj</a>
-            <a th:href="@{/admin/investity/info/deletesupplier?id={id}(id=${investityCost.getId()})}">Usuń</a>
+        <td><a th:href="@{/admin/investity/info/editcost?id={id}(id=${investityCost.getId()})}">Edytuj</a>
+            <a th:href="@{/admin/investity/info/deletecost?id={id}(id=${investityCost.getId()})}">Usuń</a>
     </tr>
 </table>
-<h4><a th:href="@{/admin/investity/info/addsupplier}">Dodaj nowy koszt</a></h4>
+<h4><a th:href="@{/admin/investity/info/addcost?investityId={investityId}(investityId=${investity.getId()})}">Dodaj nowy koszt</a></h4>
+<h2>Koszty Pracowników</h2>
+<table>
+    <tr>
+        <th>L.p</th>
+        <th>Pracownik</th>
+        <th>Ilość godzin</th>
+        <th>Koszt</th>
+        <th>Akcja</th>
+    </tr>
+    <tr th:each="users : ${allUsers}">
+        <td><span th:text="L.p"/></td>
+        <td><span th:text="${users.getFirstName() + ' ' + users.getLastName()}"/></td>
+        <td><span th:text="${allHoursByUserInInvestity.get(users.getId())}"/></td>
+        <td><span th:text="${getAllCostsByUserInInvestity.get(users.getId())}"/></td>
+        <td><a th:href="@{/admin/investity/info/showuserinfo?userid={userid}&investityid={investityid}
+        (userid=${users.getId()},investityid=${investity.getId()})}">
+        Szczegóły</a></td>
+    </tr>
+</table>
 <p><h5>Dashboard: <a href="/admin/dashboard">Dashboard</a></h5></p>
 </body>
 </html>

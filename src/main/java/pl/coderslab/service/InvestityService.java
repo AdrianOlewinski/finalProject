@@ -3,6 +3,8 @@ package pl.coderslab.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.coderslab.entity.Investity;
+import pl.coderslab.entity.User;
+import pl.coderslab.exception.InvestityNotFoundException;
 import pl.coderslab.repository.InvestityRepository;
 import pl.coderslab.repository.UserRepository;
 
@@ -16,12 +18,14 @@ public class InvestityService {
     private final InvestityRepository investityRepository;
     private final UserRepository userRepository;
     private final InvestityCostsService investityCostsService;
+    private final WorkingTimeService workingTimeService;
 
-    public InvestityService(InvestityRepository investityRepository,
-                            UserRepository userRepository, InvestityCostsService investityCostsService) {
+    public InvestityService(InvestityRepository investityRepository, UserRepository userRepository,
+                            InvestityCostsService investityCostsService, WorkingTimeService workingTimeService) {
         this.investityRepository = investityRepository;
         this.userRepository = userRepository;
         this.investityCostsService = investityCostsService;
+        this.workingTimeService = workingTimeService;
     }
 
     public List<Investity> findAll(){
@@ -49,20 +53,22 @@ public class InvestityService {
     public Double getInvestityMargin(long id){
         double result;
         Optional<Investity> investity = investityRepository.findById(id);
-        int budget = investity.get().getBudget();
-        int costs = investityCostsService.sumOfAllInvestityCosts(id);
+        int budget = investity.orElseThrow(()-> new InvestityNotFoundException(id)).getBudget();
+        int supplierCosts = investityCostsService.sumOfAllInvestityCosts(id);
+        int userCosts = workingTimeService.getAllUserCosts(id);
         if(budget == 0){
             result = Double.POSITIVE_INFINITY;
         }else{
-            result = ((Double.longBitsToDouble(budget) - Double.longBitsToDouble(costs))
-                    /Double.longBitsToDouble(budget))*100;
+            result = ((Double.longBitsToDouble(budget) - Double.longBitsToDouble(supplierCosts)
+                    - Double.longBitsToDouble(userCosts)) /Double.longBitsToDouble(budget))*100;
         }
-        return result;
+        return Math.round(result*100.0)/100.0;
     }
 
     public Map<Long, Double> getAllMargins(){
         return investityRepository.findAll().stream().
                 collect(Collectors.toMap(s->s.getId(),s->getInvestityMargin(s.getId())));
     }
+
 
 }

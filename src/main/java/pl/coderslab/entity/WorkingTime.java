@@ -31,6 +31,8 @@ public class WorkingTime {
     @DateTimeFormat (pattern = "yyyy-MM-dd")
     private LocalDate localDate;
 
+    private int salaryPerHours;
+
     public long getId() {
         return id;
     }
@@ -69,6 +71,14 @@ public class WorkingTime {
 
     public void setLocalDate(LocalDate localDate) {
         this.localDate = localDate;
+    }
+
+    public int getSalaryPerHours() {
+        return salaryPerHours;
+    }
+
+    public void setSalaryPerHours(int salaryPerHours) {
+        this.salaryPerHours = salaryPerHours;
     }
 
     @Override

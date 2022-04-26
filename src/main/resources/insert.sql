@@ -13,8 +13,8 @@ INSERT INTO user_roles (user_id, role_id) VALUES (3,1);
 INSERT INTO investity (budget, investity_name, admin_id) VALUES (100000, 'Inwestycja 1', 2);
 INSERT INTO investity (budget, investity_name, admin_id) VALUES (150000, 'Inwestycja 2', 2);
 
-INSERT INTO working_time (local_date, number_of_hours, id_investity, id_user) VALUES ('2022-04-24',10,1,1);
-INSERT INTO working_time (local_date, number_of_hours, id_investity, id_user) VALUES ('2022-04-23',7,2,1);
+INSERT INTO working_time (local_date, number_of_hours, id_investity, id_user, salary_per_hours) VALUES ('2022-04-24',10,1,1,20);
+INSERT INTO working_time (local_date, number_of_hours, id_investity, id_user, salary_per_hours) VALUES ('2022-04-23',7,2,1,20);
 
 INSERT INTO supplier (name, type, description) VALUES ('Dostawca 1', 'Dostawca', 'Opis 1');
 INSERT INTO supplier (name, type, description) VALUES ('Podwykonawca 1', 'Podwykonawca', 'Opis 1');

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wszystkie godziny</title>
+</head>
+<body>
+<h2>Wszytkie godziny użytkownika <span th:text="${user.getFirstName() + ' ' + user.getLastName()}"/> na Inwestycji -
+<span th:text="${investity.getInvestityName()}"/></h2>
+<table>
+    <tr>
+        <th>L.p</th>
+        <th>Data</th>
+        <th>Liczba godzin</th>
+        <th>Stawka godzinowa</th>
+        <th>Koszt</th>
+    </tr>
+    <tr th:each="workingTime : ${workingTime}">
+        <td><span th:text="${workingTime.getId()}">Id</span></td>
+        <td><span th:text="${workingTime.getLocalDate()}">Date</span></td>
+        <td><span th:text="${workingTime.getNumberOfHours()}">Number of Hours</span></td>
+        <td><span th:text="${workingTime.getSalaryPerHours()}">Number of Hours</span></td>
+        <td><span th:text="${workingTime.getSalaryPerHours()} * ${workingTime.getNumberOfHours()}">Number of Hours</span></td>
+    </tr>
+</table>
+<p><h5><a th:href="@{/admin/investity/info?id={id}(id=${investity.getId()})}">Powrót</a></h5></p>
+</body>
+</html>
