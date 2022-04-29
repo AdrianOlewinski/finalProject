@@ -15,6 +15,10 @@ INSERT INTO investity (budget, investity_name, admin_id) VALUES (150000, 'Inwest
 
 INSERT INTO working_time (local_date, number_of_hours, id_investity, id_user, salary_per_hours) VALUES ('2022-04-24',10,1,1,20);
 INSERT INTO working_time (local_date, number_of_hours, id_investity, id_user, salary_per_hours) VALUES ('2022-04-23',7,2,1,20);
+INSERT INTO working_time (local_date, number_of_hours, id_investity, id_user, salary_per_hours) VALUES ('2022-03-23',10,2,1,20);
+INSERT INTO working_time (local_date, number_of_hours, id_investity, id_user, salary_per_hours) VALUES ('2022-02-23',12,2,1,20);
+INSERT INTO working_time (local_date, number_of_hours, id_investity, id_user, salary_per_hours) VALUES ('2022-03-23',8,2,1,20);
+INSERT INTO working_time (local_date, number_of_hours, id_investity, id_user, salary_per_hours) VALUES ('2022-04-23',10,2,1,20);
 
 INSERT INTO supplier (name, type, description) VALUES ('Dostawca 1', 'Dostawca', 'Opis 1');
 INSERT INTO supplier (name, type, description) VALUES ('Podwykonawca 1', 'Podwykonawca', 'Opis 1');

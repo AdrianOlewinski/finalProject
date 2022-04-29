@@ -5,7 +5,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 import pl.coderslab.entity.CurrentUser;
 import pl.coderslab.entity.Investity;
 import pl.coderslab.entity.User;
@@ -16,8 +15,13 @@ import pl.coderslab.service.UserService;
 import pl.coderslab.service.WorkingTimeService;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -88,6 +92,44 @@ public class WorkingTimeController {
         Optional<WorkingTime> workingTime = workingTimeService.findById(id);
         workingTimeService.deleteById(workingTime.orElseThrow(()-> new WorkingTimeNotFoundException(id)).getId());
         return "redirect:/user/workingtime/all";
+    }
+
+    @GetMapping(path = "admin/workingtime/all")
+    @Secured("ROLE_ADMIN")
+    String showWorkingTimeSummary(Model model){
+        LocalDate localDate = LocalDate.now();
+        List<User> users = userService.findAllUsers();
+        Map<Long,Integer> allHours = workingTimeService
+                .getAllHoursInMonthAndYear(localDate.getMonth(),localDate.getYear());
+        Map<Long,Integer> allCosts = workingTimeService
+                .getAllCostsInMonthAndYear(localDate.getMonth(), localDate.getYear());
+
+        model.addAttribute("month", localDate.getMonth());
+        model.addAttribute("year", localDate.getYear());
+        model.addAttribute("users",users);
+        model.addAttribute("allHours", allHours);
+        model.addAttribute("allCosts", allCosts);
+        return "admin/workingtime/all";
+    }
+
+    @PostMapping(path = "admin/workingtime/all")
+    @Secured("ROLE_ADMIN")
+    String showWorkingTimeSummary(@RequestParam String date, Model model){
+        YearMonth yearMonth = YearMonth.parse(date, DateTimeFormatter.ofPattern("yyyy-MM"));
+        Month month = yearMonth.getMonth();
+        int year = yearMonth.getYear();
+        List<User> users = userService.findAllUsers();
+        Map<Long,Integer> allHours = workingTimeService
+                .getAllHoursInMonthAndYear(month,year);
+        Map<Long,Integer> allCosts = workingTimeService
+                .getAllCostsInMonthAndYear(month,year);
+
+        model.addAttribute("month",month);
+        model.addAttribute("year",year);
+        model.addAttribute("users",users);
+        model.addAttribute("allHours", allHours);
+        model.addAttribute("allCosts", allCosts);
+        return "admin/workingtime/all";
     }
 
 

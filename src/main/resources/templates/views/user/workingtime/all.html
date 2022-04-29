@@ -10,6 +10,7 @@
     <tr>
         <th>L.p</th>
         <th>Data</th>
+        <th>Dzień tygodnia</th>
         <th>Inwestycja</th>
         <th>Liczba godzin</th>
         <th>Akcja</th>
@@ -17,6 +18,7 @@
     <tr th:each="workingTime : ${allworkingtime}">
         <td><span th:text="${workingTime.getId()}">Id</span></td>
         <td><span th:text="${workingTime.getLocalDate()}">Date</span></td>
+        <td><span th:text="${workingTime.getLocalDate().getDayOfWeek()}">Date</span></td>
         <td><span th:text="${workingTime.getInvestity().getInvestityName()}">Investity</span></td>
         <td><span th:text="${workingTime.getNumberOfHours()}">Number of Hours</span></td>
         <td><a th:href="@{/user/workingtime/edit?id={id}(id=${workingTime.getId()})}">Edytuj</a>

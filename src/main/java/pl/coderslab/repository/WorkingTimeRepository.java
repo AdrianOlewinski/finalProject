@@ -17,4 +17,6 @@ public interface WorkingTimeRepository extends JpaRepository <WorkingTime, Long>
 
     List<User> findByInvestity_Id(long ivestityId);
 
+    List<WorkingTime> findAllByUser_Id(long userId);
+
 }
