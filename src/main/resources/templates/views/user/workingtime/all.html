@@ -1,30 +1,63 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <div th:replace="user/fragments/head.html :: head"></div>
+
     <title>Wszystkie godziny</title>
 </head>
 <body>
-<h2>Wszytkie godziny</h2>
-<table>
-    <tr>
-        <th>L.p</th>
-        <th>Data</th>
-        <th>Dzień tygodnia</th>
-        <th>Inwestycja</th>
-        <th>Liczba godzin</th>
-        <th>Akcja</th>
-    </tr>
-    <tr th:each="workingTime : ${allworkingtime}">
-        <td><span th:text="${workingTime.getId()}">Id</span></td>
-        <td><span th:text="${workingTime.getLocalDate()}">Date</span></td>
-        <td><span th:text="${workingTime.getLocalDate().getDayOfWeek()}">Date</span></td>
-        <td><span th:text="${workingTime.getInvestity().getInvestityName()}">Investity</span></td>
-        <td><span th:text="${workingTime.getNumberOfHours()}">Number of Hours</span></td>
-        <td><a th:href="@{/user/workingtime/edit?id={id}(id=${workingTime.getId()})}">Edytuj</a>
-            <a th:href="@{/user/workingtime/delete?id={id}(id=${workingTime.getId()})}" th:oncl>Usuń</a></td>
-    </tr>
-</table>
-<p><h5>Dashboard: <a href="/user/dashboard">Dashboard</a></h5></p>
+<div th:insert="user/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="user/fragments/sidebar :: sidebar"></nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Zestawienie godzin za miesiąc <span th:text="${monthMap.get(month)}"/> <span th:text="${year}"/></h1>
+
+            </div>
+            <form action="/user/workingtime/all" method="post">
+                <p>Wybierz miesiąc: <input type="month" th:name="date"/>
+                    <input type="submit" class="btn btn-primary" value="Wyślij"/></p>
+            </form>
+
+            <h3>W tym miesiącu pracowałeś <span th:text="${sumOfHours}"/> godzin i zarobileś <span th:text="${sumOfCosts}"/> zł</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>L.p</th>
+                        <th>Data</th>
+                        <th>Dzień tygodnia</th>
+                        <th>Inwestycja</th>
+                        <th>Liczba godzin</th>
+                        <th>Stawka godzinowa</th>
+                        <th>Mnożnik</th>
+                        <th>Opis</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="workingTime : ${allworkingtime}">
+                        <td><span th:text="${workingTime.getId()}">Id</span></td>
+                        <td><span th:text="${workingTime.getLocalDate()}">Date</span></td>
+                        <td><span th:text="${dayOfWeekMap.get(workingTime.getLocalDate().getDayOfWeek())}"/></td>
+                        <td><span th:text="${workingTime.getInvestity().getInvestityName()}">Investity</span></td>
+                        <td><span th:text="${workingTime.getNumberOfHours()}">Number of Hours</span></td>
+                        <td><span th:text="${workingTime.getSalaryPerHours()}"/></td>
+                        <td><span th:text="${workingTime.getMultiplier()}"/></td>
+                        <td><span th:text="${workingTime.getDescription()}"/></td>
+                        <td><a class="btn btn-info" th:href="@{/user/workingtime/edit?id={id}(id=${workingTime.getId()})}">Edytuj</a>
+                            <a class="btn btn-danger" th:href="@{/user/workingtime/delete?id={id}(id=${workingTime.getId()})}"
+                               th:onclick="return confirm('Czy chcesz usunąć godziny')">Usuń</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="user/fragments/footer :: footer"></div>
 </body>
 </html>

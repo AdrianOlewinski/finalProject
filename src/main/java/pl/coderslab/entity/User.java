@@ -1,7 +1,10 @@
 package pl.coderslab.entity;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -15,25 +18,24 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank
+    @NotBlank(message = "Musisz wpisać login!")
+    @Column(unique = true)
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "Musisz wpisać hasło!")
     private String password;
 
-    @NotBlank
+
     @Email
     private String email;
 
-    @NotBlank
     private String firstName;
 
-    @NotBlank
     private String lastName;
 
     private int phoneNumber;
 
-    @NotNull
+    @Min(value = 0, message = "Wartość musi być większa od 0!")
     private int salaryPerHours;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

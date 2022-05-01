@@ -1,6 +1,7 @@
 package pl.coderslab.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Supplier {
@@ -8,7 +9,8 @@ public class Supplier {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long id;
-
+    @NotBlank (message = "Musisz wpisać nazwę!")
+    @Column(unique = true)
     private String name;
 
     private String type;

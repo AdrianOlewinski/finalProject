@@ -29,7 +29,7 @@ public class UserController {
     @Secured("ROLE_USER")
     @GetMapping(path = "user/dashboard")
     String userDashboard(){
-        return "user/dashboard";
+        return "user/newDb";
     }
 
     @Secured("ROLE_USER")

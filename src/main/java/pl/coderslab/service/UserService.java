@@ -77,6 +77,8 @@ public class UserService {
     public void editUserByAdmin(User user){
         String password = userReposiotry.findById(user.getId()).get().getPassword();
         user.setPassword(password);
+        Role userRole = roleReposiotry.findByName("ROLE_USER");
+        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         userReposiotry.save(user);
     }
 

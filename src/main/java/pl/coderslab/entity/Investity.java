@@ -2,6 +2,8 @@ package pl.coderslab.entity;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Investity {
@@ -9,9 +11,10 @@ public class Investity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
+    @NotBlank(message = "Musisz wpisać nazwę Inwestycji!")
+    @Column(unique = true)
     private String investityName;
-
+    @Min(value = 0, message = "budżet nie może być mniejszy od 0!")
     private int budget;
 
     @ManyToOne

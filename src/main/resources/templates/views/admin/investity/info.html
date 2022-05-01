@@ -23,8 +23,8 @@
     </tr>
     <tr th:each="investityCost : ${investityCosts}">
         <td><span th:text="${investityCost.getId()}"/></td>
-        <td><span th:text="${investityCost.getSuplier().getType()}"/></td>
-        <td><span th:text="${investityCost.getSuplier().getName()}"/></td>
+        <td><span th:text="${investityCost.getSupplier().getType()}"/></td>
+        <td><span th:text="${investityCost.getSupplier().getName()}"/></td>
         <td><span th:text="${investityCost.getCost()}"/></td>
         <td><span th:text="${investityCost.getDescription()}"/></td>
         <td><a th:href="@{/admin/investity/info/editcost?id={id}(id=${investityCost.getId()})}">Edytuj</a>
@@ -37,14 +37,18 @@
     <tr>
         <th>L.p</th>
         <th>Pracownik</th>
-        <th>Ilość godzin</th>
+        <th>Ilość godzin z mnożnikiem 1</th>
+        <th>Ilość godzin z innym mnożnikiem</th>
+        <th>Akord</th>
         <th>Koszt</th>
         <th>Akcja</th>
     </tr>
     <tr th:each="users : ${allUsers}">
         <td><span th:text="L.p"/></td>
         <td><span th:text="${users.getFirstName() + ' ' + users.getLastName()}"/></td>
-        <td><span th:text="${allHoursByUserInInvestity.get(users.getId())}"/></td>
+        <td><span th:text="${allHoursByUserInInvestityMultiplierOne.get(users.getId())}"/></td>
+        <td><span th:text="${allHoursByUserInInvestityMultiplierOther.get(users.getId())}"/></td>
+        <td><span th:text="Akord"/></td>
         <td><span th:text="${getAllCostsByUserInInvestity.get(users.getId())}"/></td>
         <td><a th:href="@{/admin/investity/info/showuserinfo?userid={userid}&investityid={investityid}
         (userid=${users.getId()},investityid=${investity.getId()})}">

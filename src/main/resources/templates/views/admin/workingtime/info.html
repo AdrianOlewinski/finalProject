@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Godziny</title>
+</head>
+<body>
+<h2>Godziny użytkownika <span th:text="${user.getFirstName()+' '+user.getLastName()}"/></h2>
+<table>
+    <tr>
+        <th>L.p</th>
+        <th>Data</th>
+        <th>Dzień tygodnia</th>
+        <th>Inwestycja</th>
+        <th>Liczba godzin</th>
+        <th>Stawka godzinowa</th>
+        <th>Akcja</th>
+    </tr>
+    <tr th:each="workingTime : ${workingTime}">
+        <td><span th:text="${workingTime.getId()}">Id</span></td>
+        <td><span th:text="${workingTime.getLocalDate()}">Date</span></td>
+        <td><span th:text="${dayOfWeekMap.get(workingTime.getLocalDate().getDayOfWeek())}">Date</span></td>
+        <td><span th:text="${workingTime.getInvestity().getInvestityName()}">Investity</span></td>
+        <td><span th:text="${workingTime.getNumberOfHours()}">Number of Hours</span></td>
+        <td><span th:text="${workingTime.getSalaryPerHours()}"/></td>
+        <td><a th:href="@{/admin/workingtime/edit?id={id}(id=${workingTime.getId()})}">Edytuj</a>
+            <a th:href="@{/admin/workingtime/delete?id={id}(id=${workingTime.getId()})}"
+               th:onclick="return confirm('Czy chcesz usunąć godziny')">Usuń</a></td>
+    </tr>
+</table>
+<p><h5>Dashboard: <a href="/admin/dashboard">Dashboard</a></h5></p>
+</body>
+</html>

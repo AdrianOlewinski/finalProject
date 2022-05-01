@@ -22,7 +22,8 @@
         <td><span th:text="${allCosts.get(investity.getId())}"/></td>
         <td><span th:text="${allMargins.get(investity.getId())}"/></td>
         <td><a th:href="@{/admin/investity/edit?id={id}(id=${investity.getId()})}">Edytuj</a>
-            <a th:href="@{/admin/investity/delete?id={id}(id=${investity.getId()})}">Usuń</a>
+            <a th:href="@{/admin/investity/delete?id={id}(id=${investity.getId()})}"
+               th:onclick="return confirm('Czy chcesz usunąć inwestycję?')">Usuń</a>
             <a th:href="@{/admin/investity/info?id={id}(id=${investity.getId()})}">Szczegóły</a></td>
     </tr>
 </table>

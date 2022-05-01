@@ -3,8 +3,7 @@ package pl.coderslab.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.coderslab.entity.Investity;
-import pl.coderslab.entity.User;
-import pl.coderslab.exception.InvestityNotFoundException;
+import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.repository.InvestityRepository;
 import pl.coderslab.repository.UserRepository;
 
@@ -53,7 +52,7 @@ public class InvestityService {
     public Double getInvestityMargin(long id){
         double result;
         Optional<Investity> investity = investityRepository.findById(id);
-        int budget = investity.orElseThrow(()-> new InvestityNotFoundException(id)).getBudget();
+        int budget = investity.orElseThrow(()->new EntityNotFoundException(id)).getBudget();
         int supplierCosts = investityCostsService.sumOfAllInvestityCosts(id);
         int userCosts = workingTimeService.getAllUserCosts(id);
         if(budget == 0){

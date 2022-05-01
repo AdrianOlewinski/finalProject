@@ -7,7 +7,7 @@
 <body>
 <form action="/admin/investity/info/addcost" th:object="${investityCosts}" method="post">
     <input type="hidden" th:field="*{investity}">
-    <p>Dostawca: <select th:field="*{suplier}">
+    <p>Dostawca: <select th:field="*{supplier}">
         <option th:each="option : ${suppliers}" th:value="${option.getId()}" th:text="${option.getName()}"></option>
     </select> </p>
     <p>Budżet: <input type="number" th:field="*{cost}" /></p>

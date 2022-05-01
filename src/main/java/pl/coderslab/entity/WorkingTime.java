@@ -3,6 +3,8 @@ package pl.coderslab.entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,16 +25,23 @@ public class WorkingTime {
 
     @ManyToOne
     @JoinColumn (name = "id_investity")
-//    @NotNull
     private Investity investity;
 
     @NotNull
+    @Min(value = 0, message = "Wartość nie może być większa od 0!")
+    @Max(value = 24, message = "Wartość nie może być większa od 24!")
     private int numberOfHours;
 
     @DateTimeFormat (pattern = "yyyy-MM-dd")
     private LocalDate localDate;
 
+    @Min(value = 0, message = "Wartość nie może być mniejsza od 0!")
     private int salaryPerHours;
+    @Min(value = 1, message = "Mnożnik nie może być mniejszy od 1")
+    @Max(value = 5, message = "Mnożnik nie może być większy od 5")
+    private double multiplier;
+
+    private String description;
 
     public long getId() {
         return id;
@@ -82,6 +91,21 @@ public class WorkingTime {
         this.salaryPerHours = salaryPerHours;
     }
 
+    public double getMultiplier() {
+        return multiplier;
+    }
+    public void setMultiplier(double multiplier) {
+        this.multiplier = multiplier;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "WorkingTime{" +
@@ -90,6 +114,8 @@ public class WorkingTime {
                 ", investity=" + investity.getInvestityName() +
                 ", numberOfHours=" + numberOfHours +
                 ", localDate=" + localDate +
+                ", salaryPerHours=" + salaryPerHours +
+                ", multiplier=" + multiplier +
                 '}';
     }
 }

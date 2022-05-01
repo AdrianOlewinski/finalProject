@@ -5,21 +5,21 @@
     <title>Godziny pracy</title>
 </head>
 <body>
-<p> Data: <span th:text="${workingTime.getLocalDate()}"></span></p>
-<form action="/user/workingtime/edit" th:object="${workingTime}" method="post">
+<p> Data: <span th:text="${workingtime.getLocalDate()}"></span></p>
+<form action="/admin/workingtime/edit" th:object="${workingtime}" method="post">
     <input type="hidden" th:field="*{id}"/>
     <input type="hidden" th:field="*{localDate}"/>
-    <input type="hidden" th:field="*{salaryPerHours}"/>
     <input type="hidden" th:field="*{user}"/>
     <p>Inwestycja: <select th:field="*{investity}">
         <option th:each="option : ${investity}" th:value="${option.getId()}" th:text="${option.getInvestityName()}"></option>
     </select></p>
     <p>Liczba godzin: <input type="number" th:field="*{numberOfHours}"/></p>
     <p>Mnożnik: <input type="number" step="0.1" th:field="*{multiplier}"/></p>
+    <p>Stawka godzinowa: <input type="number" th:field="*{salaryPerHours}"/></p>
     <p>Opis: <input type="text" th:field="*{description}"/></p>
     <p><input type="submit" value="Submit" /></p>
 </form>
-<p><h3>Powrót: <a href="/user/workingtime/all">Wszystkie</a></h3></p>
+<p><h3>Powrót: <a href="/admin/workingtime/all">Wszystkie</a></h3></p>
 
 </body>
 </html>

@@ -7,13 +7,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class InvestityNotFoundAdvice {
+public class EntityNotFoundAdvice {
 
-    @ResponseBody
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String investityFoundHandler(InvestityNotFoundException e){
-        return e.getMessage();
+    public String entityNotFoundHandler(EntityNotFoundException e){
+        return "redirect:/";
     }
 }
-

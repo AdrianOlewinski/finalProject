@@ -24,8 +24,7 @@
     <td><span th:text="${user.getEmail()}">Email</span></td>
     <td><span th:text="${user.getPhoneNumber()}">PhoneNumber</span></td>
     <td><a th:href="@{/admin/user/edit?id={id}(id=${user.getId()})}">Edytuj</a>
-      <a th:href="@{/admin/user/delete?id={id}(id=${user.getId()})}">Usuń</a>
-      <a th:href="@{/admin/user/info?id={id}(id=${user.getId()})}">Szczegóły</a></td>
+      <a th:href="@{/admin/user/delete?id={id}(id=${user.getId()})}">Usuń</a></td>
   </tr>
 </table>
 <p><h5>Dashboard: <a href="/admin/dashboard">Dashboard</a></h5></p>

@@ -11,16 +11,27 @@
     <tr>
         <th>L.p</th>
         <th>Data</th>
+        <th>Dzień tygodnia</th>
         <th>Liczba godzin</th>
         <th>Stawka godzinowa</th>
+        <th>Mnożnik</th>
         <th>Koszt</th>
+        <th>Opis</th>
+        <th>Akcja</th>
     </tr>
-    <tr th:each="workingTime : ${workingTime}">
-        <td><span th:text="${workingTime.getId()}">Id</span></td>
-        <td><span th:text="${workingTime.getLocalDate()}">Date</span></td>
-        <td><span th:text="${workingTime.getNumberOfHours()}">Number of Hours</span></td>
-        <td><span th:text="${workingTime.getSalaryPerHours()}">Number of Hours</span></td>
-        <td><span th:text="${workingTime.getSalaryPerHours()} * ${workingTime.getNumberOfHours()}">Number of Hours</span></td>
+    <tr th:each="workingTimes : ${workingTime}">
+        <td><span th:text="${workingTimes.getId()}"/></td>
+        <td><span th:text="${workingTimes.getLocalDate()}"/></td>
+        <td><span th:text="${dayOfWeekMap.get(workingTimes.getLocalDate().getDayOfWeek())}"/></td>
+        <td><span th:text="${workingTimes.getNumberOfHours()}"/></td>
+        <td><span th:text="${workingTimes.getSalaryPerHours()}"/></td>
+        <td><span th:text="${workingTimes.getMultiplier()}"/></td>
+        <td><span th:text="${workingTimes.getSalaryPerHours()} * ${workingTimes.getNumberOfHours()}
+        *${workingTimes.getMultiplier()}"/></td>
+        <td><span th:text="${workingTimes.getDescription()}"/></td>
+        <td><a th:href="@{/admin/workingtime/edit?id={id}(id=${workingTimes.getId()})}">Edytuj</a>
+            <a th:href="@{/admin/workingtime/delete?id={id}(id=${workingTimes.getId()})}"
+               th:onclick="return confirm('Czy chcesz usunąć godziny')">Usuń</a></td>
     </tr>
 </table>
 <p><h5><a th:href="@{/admin/investity/info?id={id}(id=${investity.getId()})}">Powrót</a></h5></p>

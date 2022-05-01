@@ -1,6 +1,7 @@
 package pl.coderslab.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 @Entity
 public class InvestityCosts {
@@ -10,13 +11,14 @@ public class InvestityCosts {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name="suplier_id")
-    private Supplier suplier;
+    @JoinColumn(name="supplier_id")
+    private Supplier supplier;
 
     @ManyToOne
     @JoinColumn(name="ivestity_id")
     private Investity investity;
 
+    @Min(value = 0, message = "Koszt nie może być mniejszy od 0!")
     private int cost;
 
     private String description;
@@ -29,12 +31,12 @@ public class InvestityCosts {
         this.id = id;
     }
 
-    public Supplier getSuplier() {
-        return suplier;
+    public Supplier getSupplier() {
+        return supplier;
     }
 
-    public void setSuplier(Supplier suplier) {
-        this.suplier = suplier;
+    public void setSupplier(Supplier p) {
+        this.supplier = p;
     }
 
     public Investity getInvestity() {
@@ -65,7 +67,7 @@ public class InvestityCosts {
     public String toString() {
         return "SuplierInvestity{" +
                 "id=" + id +
-                ", suplier=" + suplier.getName() +
+                ", suplier=" + supplier.getName() +
                 ", investity=" + investity.getInvestityName() +
                 ", cost=" + cost +
                 ", description='" + description + '\'' +

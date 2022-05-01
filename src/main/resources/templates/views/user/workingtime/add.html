@@ -6,11 +6,17 @@
 </head>
 <body>
 <form action="/user/workingtime/add" th:object="${workingTime}" method="post">
+    <input type="hidden" th:field="*{user}">
+    <input type="hidden" th:field="*{salaryPerHours}">
     <p>Data: <input type="date" th:field="*{localDate}" /></p>
     <p>Inwestycja: <select th:field="*{investity}">
         <option th:each="option : ${investity}" th:value="${option.getId()}" th:text="${option.getInvestityName()}"></option>
     </select></p>
     <p>Liczba godzin: <input type="number" th:field="*{numberOfHours}"/></p>
+    <p th:if="${#fields.hasErrors('numberOfHours')}" th:errors="*{numberOfHours}"/>
+    <p>Mnożnik: <input type="number" step="0.1" th:field="*{multiplier}"/></p>
+    <p th:if="${#fields.hasErrors('multiplier')}" th:errors="*{multiplier}"/>
+    <p>Opis: <input type="text" th:field="*{description}"/></p>
     <p><input type="submit" value="Submit" /></p>
 </form>
 <p><h3>Powrót: <a href="/user/workingtime/all">Wszystkie</a></h3></p>

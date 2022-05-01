@@ -7,6 +7,7 @@
 <body>
 <form action="/user/editdata" th:object="${user}" method="post">
     <input type="hidden" th:field="*{id}"/>
+    <input type="hidden" th:field="*{salaryPerHours}">
     <p>Login: <input type="text" th:field="*{username}"/></p>
     <p>Imię: <input type="text" th:field="*{firstName}"/></p>
     <p>Nazwisko: <input type="text" th:field="*{lastName}"/></p>

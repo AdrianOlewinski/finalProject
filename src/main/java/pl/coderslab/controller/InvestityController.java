@@ -8,18 +8,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.coderslab.entity.*;
-import pl.coderslab.exception.InvestityCostsNotFoundException;
-import pl.coderslab.exception.InvestityNotFoundException;
-import pl.coderslab.exception.SupplierNotFoundException;
-import pl.coderslab.exception.UserNotFoundException;
-import pl.coderslab.repository.InvestityRepository;
+import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.service.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.time.DayOfWeek;
+import java.time.Month;
+import java.util.*;
 
 @Controller
 public class InvestityController {
@@ -93,15 +87,18 @@ public class InvestityController {
     @GetMapping(path = "admin/investity/info")
     @Secured("ROLE_ADMIN")
     String showInfo(@RequestParam long id, Model model){
-        Investity investity = investityService.findById(id).orElseThrow(()->new InvestityNotFoundException(id));
+        Investity investity = investityService.findById(id).orElseThrow(()->new EntityNotFoundException(id));
         List<InvestityCosts> investityCosts = investityCostsService.findAllByInvestityId(id);
         int sumOfSuppliersCosts = investityCostsService.sumOfAllInvestityCosts(id);
         int sumOfUserCosts = workingTimeService.getAllUserCosts(id);
         double margin = investityService.getInvestityMargin(id);
 
         List<User> allUsers = workingTimeService.allUsersInInvestity(id);
-        Map<Long, Integer> allHoursByUserInInvestity = workingTimeService.getAllHoursByUserInInvestity(id);
-        Map<Long, Integer> getAllCostsByUserInInvestity = workingTimeService.getAllCostsByUserInInvestity(id);
+        Map<Long, Double> allHoursByUserInInvestityMultiplierOne
+                = workingTimeService.getAllHoursByUserInInvestityWithMultiplierOne(id);
+        Map<Long, Double> allHoursByUserInInvestityMultiplierOther
+                = workingTimeService.getAllHoursByUserInInvestityWithOtherMultiplier(id);
+        Map<Long, Double> getAllCostsByUserInInvestity = workingTimeService.getAllCostsByUserInInvestity(id);
 
         model.addAttribute("investity",investity);
         model.addAttribute("investityCosts",investityCosts);
@@ -110,7 +107,8 @@ public class InvestityController {
 
         model.addAttribute("sumOfUserCosts",sumOfUserCosts);
         model.addAttribute("allUsers",allUsers);
-        model.addAttribute("allHoursByUserInInvestity",allHoursByUserInInvestity);
+        model.addAttribute("allHoursByUserInInvestityMultiplierOne",allHoursByUserInInvestityMultiplierOne);
+        model.addAttribute("allHoursByUserInInvestityMultiplierOther",allHoursByUserInInvestityMultiplierOther);
         model.addAttribute("getAllCostsByUserInInvestity",getAllCostsByUserInInvestity);
         return "admin/investity/info";
     }
@@ -120,7 +118,7 @@ public class InvestityController {
     String editInvestityCosts(@RequestParam long id, Model model){
         Optional<InvestityCosts> investityCosts = investityCostsService.findCosts(id);
         model.addAttribute("investityCosts", investityCosts
-                .orElseThrow(()-> new InvestityCostsNotFoundException(id)));
+                .orElseThrow(()-> new EntityNotFoundException(id)));
         return "admin/investity/info/editcost";
     }
     @PostMapping(path = "admin/investity/info/editcost")
@@ -134,7 +132,7 @@ public class InvestityController {
     @Secured("ROLE_ADMIN")
     String deleteInvestityCosts(@RequestParam long id){
         long redirectId = investityCostsService.findCosts(id).orElseThrow(
-                ()->new InvestityCostsNotFoundException(id)).getInvestity().getId();
+                ()->new EntityNotFoundException(id)).getInvestity().getId();
         investityCostsService.deleteById(id);
         return "redirect:/admin/investity/info?id="+redirectId;
     }
@@ -143,7 +141,7 @@ public class InvestityController {
     String addInvestityCosts(Model model, @RequestParam long investityId){
         InvestityCosts investityCosts = new InvestityCosts();
         investityCosts.setInvestity(investityService.findById(investityId)
-                .orElseThrow(()->new InvestityNotFoundException(investityId)));
+                .orElseThrow(()->new EntityNotFoundException(investityId)));
         model.addAttribute("investityCosts",investityCosts);
         return "admin/investity/info/addcost";
     }
@@ -160,14 +158,44 @@ public class InvestityController {
         List<WorkingTime> workingTime = workingTimeService.findByInvestity_IdAndUser_Id(investityid,userid);
         model.addAttribute("workingTime",workingTime);
         model.addAttribute("user",userService.findByUserId(userid)
-                .orElseThrow(()->new UserNotFoundException(userid)));
+                .orElseThrow(()->new EntityNotFoundException(userid)));
         model.addAttribute("investity",investityService.findById(investityid)
-                .orElseThrow(()->new InvestityNotFoundException(investityid)));
+                .orElseThrow(()->new EntityNotFoundException(investityid)));
         return "admin/investity/info/showuserinfo";
     }
 
     @ModelAttribute("suppliers")
     Collection<Supplier> findAllSuppliers(){
         return supplierService.findAll();
+    }
+    @ModelAttribute("dayOfWeekMap")
+    Map<DayOfWeek, String> changeDayOfWeekNameToPolish(){
+        Map<DayOfWeek, String> map = new HashMap<>();
+        map.put(DayOfWeek.MONDAY, "Poniedziałek");
+        map.put(DayOfWeek.TUESDAY, "Wtorek");
+        map.put(DayOfWeek.WEDNESDAY, "Środa");
+        map.put(DayOfWeek.THURSDAY, "Czwartek");
+        map.put(DayOfWeek.FRIDAY, "Piątek");
+        map.put(DayOfWeek.SATURDAY, "Sobota");
+        map.put(DayOfWeek.SUNDAY, "Niedziela");
+        return map;
+    }
+
+    @ModelAttribute("monthMap")
+    Map<Month, String> changeMonthNameToPolish(){
+        Map<Month, String> map = new HashMap<>();
+        map.put(Month.JANUARY, "Styczeń");
+        map.put(Month.FEBRUARY, "Luty");
+        map.put(Month.MARCH , "Marzec");
+        map.put(Month.APRIL , "Kwiecień");
+        map.put(Month.MAY , "Maj");
+        map.put(Month.JUNE , "Czerwiec");
+        map.put(Month.JULY , "Lipiec");
+        map.put(Month.AUGUST , "Sierpień");
+        map.put(Month.SEPTEMBER , "Wrzesień");
+        map.put(Month.OCTOBER , "Październik");
+        map.put(Month.NOVEMBER , "Listopad");
+        map.put(Month.DECEMBER , "Grudzień");
+        return map;
     }
 }
