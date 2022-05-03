@@ -3,6 +3,8 @@ package pl.coderslab.controller;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +13,7 @@ import pl.coderslab.entity.*;
 import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.service.*;
 
+import javax.validation.Valid;
 import java.time.DayOfWeek;
 import java.time.Month;
 import java.util.*;
@@ -45,7 +48,14 @@ public class InvestityController {
 
     @PostMapping(path = "admin/investity/add")
     @Secured("ROLE_ADMIN")
-    String addNewInvestity(@ModelAttribute Investity investity){
+    String addNewInvestity(@Valid Investity investity, BindingResult result){
+        if(investityService.isInvestityNameTaken(investity)){
+            result.addError(new FieldError("investity", "investityName"
+                    , "Nazwa inwestycji jest zajęta!"));
+        }
+        if(result.hasErrors()){
+            return "admin/investity/add";
+        }
         investityService.addNewInvestity(investity);
         return "redirect:/admin/investity/all";
     }
@@ -54,7 +64,7 @@ public class InvestityController {
     @Secured("ROLE_ADMIN")
     String showAllInvestities(Model model){
         List<Investity> investities = investityService.findAll();
-        Map<Long,Integer> allCosts = investityService.getAllCosts();
+        Map<Long,Double> allCosts = investityService.getAllCosts();
         Map<Long,Double> allMargins = investityService.getAllMargins();
         model.addAttribute("investities",investities);
         model.addAttribute("allCosts", allCosts);
@@ -72,7 +82,14 @@ public class InvestityController {
 
     @PostMapping(path = "admin/investity/edit")
     @Secured("ROLE_ADMIN")
-    String editInvestity(@ModelAttribute Investity investity){
+    String editInvestity(@Valid Investity investity, BindingResult result){
+        if(investityService.isInvestityNameTaken(investity)){
+            result.addError(new FieldError("investity", "investityName"
+                    , "Nazwa inwestycji jest zajęta!"));
+        }
+        if(result.hasErrors()){
+            return "admin/investity/add";
+        }
         investityService.editInvestity(investity);
         return "redirect:/admin/investity/all";
     }
@@ -123,7 +140,10 @@ public class InvestityController {
     }
     @PostMapping(path = "admin/investity/info/editcost")
     @Secured("ROLE_ADMIN")
-    String editInvestityCosts(@ModelAttribute InvestityCosts investityCosts){
+    String editInvestityCosts(@Valid InvestityCosts investityCosts, BindingResult result){
+        if(result.hasErrors()){
+            return "admin/investity/info/editcost";
+        }
         investityCostsService.save(investityCosts);
         return "redirect:/admin/investity/info?id="+investityCosts.getInvestity().getId();
     }
@@ -147,7 +167,10 @@ public class InvestityController {
     }
     @PostMapping(path = "admin/investity/info/addcost")
     @Secured("ROLE_ADMIN")
-    String addInvestityCosts(@ModelAttribute InvestityCosts investityCosts){
+    String addInvestityCosts(@Valid InvestityCosts investityCosts, BindingResult result){
+        if(result.hasErrors()){
+            return "admin/investity/info/addcost";
+        }
         investityCostsService.save(investityCosts);
         return "redirect:/admin/investity/info?id="+investityCosts.getInvestity().getId();
     }

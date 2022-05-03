@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 import pl.coderslab.entity.Supplier;
+import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.repository.InvestityRepository;
 import pl.coderslab.repository.InvestityCostsRepository;
 import pl.coderslab.repository.SupplierRepository;
@@ -18,10 +19,9 @@ public class SupplierService {
     private final InvestityCostsRepository InvestityCostsRepository;
     private final InvestityRepository investityRepository;
 
-    public SupplierService(SupplierRepository supplierRepository, InvestityCostsRepository InvestityCostsRepository,
-                           InvestityRepository investityRepository) {
+    public SupplierService(SupplierRepository supplierRepository, pl.coderslab.repository.InvestityCostsRepository investityCostsRepository, InvestityRepository investityRepository) {
         this.supplierRepository = supplierRepository;
-        this.InvestityCostsRepository = InvestityCostsRepository;
+        InvestityCostsRepository = investityCostsRepository;
         this.investityRepository = investityRepository;
     }
 
@@ -43,5 +43,17 @@ public class SupplierService {
 
     public Optional<Supplier> findById(long id){
         return supplierRepository.findById(id);
+    }
+    public boolean isSupplierNameTaken(Supplier supplier) {
+        boolean result = false;
+        if(supplier.getId()==0){
+            result = supplierRepository.findByName(supplier.getName()).isPresent();
+        }else if(supplier.getName().equals(supplierRepository
+                .findById(supplier.getId()).orElseThrow(()->new EntityNotFoundException(supplier.getId())).getName())){
+            result = false;
+        }else{
+            result = supplierRepository.findByName(supplier.getName()).isPresent();
+        }
+        return result;
     }
 }

@@ -18,7 +18,7 @@ public class InvestityCosts {
     @JoinColumn(name="ivestity_id")
     private Investity investity;
 
-    @Min(value = 0, message = "Koszt nie może być mniejszy od 0!")
+    @Min(value = 1, message = "Koszt nie może być mniejszy od 1!")
     private int cost;
 
     private String description;

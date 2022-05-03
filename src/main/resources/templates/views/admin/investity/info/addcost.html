@@ -1,20 +1,46 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Dodaj koszt</title>
+    <div th:replace="admin/fragments/head.html :: head"></div>
+    <title>Inwestycje</title>
 </head>
 <body>
-<form action="/admin/investity/info/addcost" th:object="${investityCosts}" method="post">
-    <input type="hidden" th:field="*{investity}">
-    <p>Dostawca: <select th:field="*{supplier}">
-        <option th:each="option : ${suppliers}" th:value="${option.getId()}" th:text="${option.getName()}"></option>
-    </select> </p>
-    <p>Budżet: <input type="number" th:field="*{cost}" /></p>
-    <p>Opis: <input type="text" th:field="*{description}" /></p>
-    <p><input type="submit" value="Submit"/></p>
-</form>
-<p><h3><a href="/admin/investity/all">Powrót</a></h3></p>
+<div th:insert="admin/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/fragments/sidebar :: sidebar"></nav>
 
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Inwestycje</h1>
+
+            </div>
+            <h2>Dodaj koszt</h2>
+            <div class="table-responsive">
+                <form action="/admin/investity/info/addcost" th:object="${investityCosts}" method="post">
+                    <input type="hidden" th:field="*{investity}">
+                    <div class="mb-3">
+                        <label for="supplier" class="form-label">Inwestycja</label>
+                        <select th:field="*{supplier}" class="form-control" id="supplier">
+                            <option th:each="option : ${suppliers}" th:value="${option.getId()}"
+                                    th:text="${option.getName()}"></option></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cost" class="form-label">Koszt</label>
+                        <input type="number" step="1" th:field="*{cost}" class="form-control" id="cost" th:errorclass="is-invalid"/>
+                        <div th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Koszt</label>
+                        <input type="text" step="1" th:field="*{description}" class="form-control" id="description"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Wyślij</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="admin/fragments/footer :: footer"></div>
 </body>
 </html>

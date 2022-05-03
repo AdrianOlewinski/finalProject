@@ -25,6 +25,6 @@ INSERT INTO supplier (name, type, description) VALUES ('Onninen', 'Dostawca', 'H
 INSERT INTO supplier (name, type, description) VALUES ('Kamyk', 'Podwykonawca', 'Zakes teletechniczny');
 INSERT INTO supplier (name, type, description) VALUES ('Keren', 'Dostawca', 'Dostawca lamp');
 
-INSERT INTO investity_costs (cost, description, ivestity_id, suplier_id) VALUES (500, 'Dostawa materiałów', 1, 1);
-INSERT INTO investity_costs (cost, description, ivestity_id, suplier_id) VALUES (1000, 'Zakres: SSP, CCTV, SSWIN, przyzywówka, LAN', 1, 2);
-INSERT INTO investity_costs (cost, description, ivestity_id, suplier_id) VALUES (2000, 'Dostawa lamp oświetleniowych', 1, 3);
+INSERT INTO investity_costs (cost, description, ivestity_id, supplier_id) VALUES (500, 'Dostawa materiałów', 1, 1);
+INSERT INTO investity_costs (cost, description, ivestity_id, supplier_id) VALUES (1000, 'Zakres: SSP, CCTV, SSWIN, przyzywówka, LAN', 1, 2);
+INSERT INTO investity_costs (cost, description, ivestity_id, supplier_id) VALUES (2000, 'Dostawa lamp oświetleniowych', 1, 3);

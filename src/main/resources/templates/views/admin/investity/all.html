@@ -1,32 +1,53 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Wszystkie inwestycje</title>
+    <div th:replace="admin/fragments/head.html :: head"></div>
+
+    <title>Inwestycje</title>
 </head>
 <body>
-<h2>Dostawcy</h2>
-<table>
-    <tr>
-        <th>L.p</th>
-        <th>Nazwa</th>
-        <th>Budżet</th>
-        <th>Koszty</th>
-        <th>Marża</th>
-        <th>Akcja</th>
-    </tr>
-    <tr th:each="investity : ${investities}">
-        <td><span th:text="${investity.getId()}"/></td>
-        <td><span th:text="${investity.getInvestityName()}"/></td>
-        <td><span th:text="${investity.getBudget()}"/></td>
-        <td><span th:text="${allCosts.get(investity.getId())}"/></td>
-        <td><span th:text="${allMargins.get(investity.getId())}"/></td>
-        <td><a th:href="@{/admin/investity/edit?id={id}(id=${investity.getId()})}">Edytuj</a>
-            <a th:href="@{/admin/investity/delete?id={id}(id=${investity.getId()})}"
-               th:onclick="return confirm('Czy chcesz usunąć inwestycję?')">Usuń</a>
-            <a th:href="@{/admin/investity/info?id={id}(id=${investity.getId()})}">Szczegóły</a></td>
-    </tr>
-</table>
-<p><h5>Dashboard: <a href="/admin/dashboard">Dashboard</a></h5></p>
+<div th:insert="admin/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/fragments/sidebar :: sidebar"></nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Inwestycje</h1>
+
+            </div>
+            <h2>Wszystkie Inwestycje</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>L.p</th>
+                        <th>Nazwa</th>
+                        <th>Budżet</th>
+                        <th>Koszty</th>
+                        <th>Marża</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="investity,counter : ${investities}">
+                        <td><span th:text="${counter.count}"/></td>
+                        <td><span th:text="${investity.getInvestityName()}"/></td>
+                        <td><span th:text="${investity.getBudget()}"/> zł</td>
+                        <td><span th:text="${allCosts.get(investity.getId())}"/> zł</td>
+                        <td><span th:text="${allMargins.get(investity.getId())}"/></td>
+                        <td><a class="btn btn-success" th:href="@{/admin/investity/edit?id={id}(id=${investity.getId()})}">Edytuj</a>
+                            <a class="btn btn-danger" th:href="@{/admin/investity/delete?id={id}(id=${investity.getId()})}"
+                               th:onclick="return confirm('Czy chcesz usunąć inwestycję?')">Usuń</a>
+                            <a class="btn btn-info" th:href="@{/admin/investity/info?id={id}(id=${investity.getId()})}">Szczegóły</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="admin/fragments/footer :: footer"></div>
 </body>
 </html>

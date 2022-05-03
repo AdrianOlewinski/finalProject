@@ -3,6 +3,7 @@ package pl.coderslab.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.coderslab.entity.Investity;
+import pl.coderslab.entity.User;
 import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.repository.InvestityRepository;
 import pl.coderslab.repository.UserRepository;
@@ -44,9 +45,9 @@ public class InvestityService {
         return investityRepository.findById(id);
     }
 
-    public Map<Long, Integer> getAllCosts(){
+    public Map<Long, Double> getAllCosts(){
         return investityRepository.findAll().stream().collect(Collectors.toMap(s -> s.getId()
-                ,s -> investityCostsService.sumOfAllInvestityCosts(s.getId())));
+                ,s -> investityCostsService.sumOfAllInvestityCosts(s.getId())+workingTimeService.sumOfAllInvestityCost(s.getId())));
     }
 
     public Double getInvestityMargin(long id){
@@ -67,6 +68,19 @@ public class InvestityService {
     public Map<Long, Double> getAllMargins(){
         return investityRepository.findAll().stream().
                 collect(Collectors.toMap(s->s.getId(),s->getInvestityMargin(s.getId())));
+    }
+
+    public boolean isInvestityNameTaken(Investity investity) {
+        boolean result = false;
+        if(investity.getId()==0){
+            result = investityRepository.findByInvestityName(investity.getInvestityName()).isPresent();
+        }else if(investity.getInvestityName().equals(investityRepository
+                .findById(investity.getId()).orElseThrow(()->new EntityNotFoundException(investity.getId())).getInvestityName())){
+            result = false;
+        }else{
+            result = investityRepository.findByInvestityName(investity.getInvestityName()).isPresent();
+        }
+        return result;
     }
 
 

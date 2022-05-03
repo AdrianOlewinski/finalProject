@@ -14,7 +14,7 @@ public class Investity {
     @NotBlank(message = "Musisz wpisać nazwę Inwestycji!")
     @Column(unique = true)
     private String investityName;
-    @Min(value = 0, message = "budżet nie może być mniejszy od 0!")
+    @Min(value = 1, message = "budżet nie może być mniejszy od 1!")
     private int budget;
 
     @ManyToOne

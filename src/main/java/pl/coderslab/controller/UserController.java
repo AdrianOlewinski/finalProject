@@ -116,7 +116,14 @@ public class UserController {
 
     @PostMapping(path = "admin/user/add")
     @Secured("ROLE_ADMIN")
-    String addNewUser(@ModelAttribute User user) {
+    String addNewUser(@Valid User user, BindingResult result) {
+        if (userService.isUsernameTaken(user)) {
+            result.addError(new FieldError("user", "username", "Login jest już zajęty!"));
+        }
+
+        if (result.hasErrors()) {
+            return "admin/user/add";
+        }
         userService.addNewUser(user);
         return "redirect:/admin/user/allusers";
     }
@@ -131,7 +138,14 @@ public class UserController {
 
     @PostMapping(path = "admin/user/edit")
     @Secured("ROLE_ADMIN")
-    String editUserByAdmin(@ModelAttribute User user) {
+    String editUserByAdmin(@Valid User user, BindingResult result) {
+        if (userService.isUsernameTaken(user)) {
+            result.addError(new FieldError("user", "username", "Login jest już zajęty!"));
+        }
+
+        if (result.hasErrors()) {
+            return "admin/user/edit";
+        }
         userService.editUserByAdmin(user);
         return "redirect:/admin/user/allusers";
     }

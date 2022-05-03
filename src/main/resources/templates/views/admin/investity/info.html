@@ -1,60 +1,81 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Szczegóły inwestycji</title>
+    <div th:replace="admin/fragments/head.html :: head"></div>
+
+    <title>Inwestycje</title>
 </head>
 <body>
-<h2>Podsumowanie</h2>
-<h3><span th:text="${investity.getInvestityName()}"/></h3>
-<h3>Budżet: <span th:text="${investity.getBudget()}"/> zł</h3>
-<h3>Koszty dostawców/podwykonawców: <span th:text="${sumOfSuppliersCosts}"/> zł</h3>
-<h3>Koszty pracowników: <span th:text="${sumOfUserCosts}"/> zł</h3>
-<h3>Marża: <span th:text="${margin}"/> %</h3>
-<h2>Koszty Dostawców</h2>
-<table>
-    <tr>
-        <th>L.p</th>
-        <th>Typ</th>
-        <th>Nazwa</th>
-        <th>Koszt</th>
-        <th>Opis</th>
-        <th>Akcja</th>
-    </tr>
-    <tr th:each="investityCost : ${investityCosts}">
-        <td><span th:text="${investityCost.getId()}"/></td>
-        <td><span th:text="${investityCost.getSupplier().getType()}"/></td>
-        <td><span th:text="${investityCost.getSupplier().getName()}"/></td>
-        <td><span th:text="${investityCost.getCost()}"/></td>
-        <td><span th:text="${investityCost.getDescription()}"/></td>
-        <td><a th:href="@{/admin/investity/info/editcost?id={id}(id=${investityCost.getId()})}">Edytuj</a>
-            <a th:href="@{/admin/investity/info/deletecost?id={id}(id=${investityCost.getId()})}">Usuń</a>
-    </tr>
-</table>
-<h4><a th:href="@{/admin/investity/info/addcost?investityId={investityId}(investityId=${investity.getId()})}">Dodaj nowy koszt</a></h4>
-<h2>Koszty Pracowników</h2>
-<table>
-    <tr>
-        <th>L.p</th>
-        <th>Pracownik</th>
-        <th>Ilość godzin z mnożnikiem 1</th>
-        <th>Ilość godzin z innym mnożnikiem</th>
-        <th>Akord</th>
-        <th>Koszt</th>
-        <th>Akcja</th>
-    </tr>
-    <tr th:each="users : ${allUsers}">
-        <td><span th:text="L.p"/></td>
-        <td><span th:text="${users.getFirstName() + ' ' + users.getLastName()}"/></td>
-        <td><span th:text="${allHoursByUserInInvestityMultiplierOne.get(users.getId())}"/></td>
-        <td><span th:text="${allHoursByUserInInvestityMultiplierOther.get(users.getId())}"/></td>
-        <td><span th:text="Akord"/></td>
-        <td><span th:text="${getAllCostsByUserInInvestity.get(users.getId())}"/></td>
-        <td><a th:href="@{/admin/investity/info/showuserinfo?userid={userid}&investityid={investityid}
-        (userid=${users.getId()},investityid=${investity.getId()})}">
-        Szczegóły</a></td>
-    </tr>
-</table>
-<p><h5>Dashboard: <a href="/admin/dashboard">Dashboard</a></h5></p>
+<div th:insert="admin/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/fragments/sidebar :: sidebar"></nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Szczegóły Inwestycji</h1>
+
+            </div>
+            <h4><span th:text="${investity.getInvestityName()}"/></h4>
+            <h5>Budżet: <span th:text="${investity.getBudget()}"/> zł</h5>
+            <h5>Koszty dostawców/podwykonawców: <span th:text="${sumOfSuppliersCosts}"/> zł</h5>
+            <h5>Koszty pracowników: <span th:text="${sumOfUserCosts}"/> zł</h5>
+            <h5>Marża: <span th:text="${margin}"/> %</h5>
+            <div class="table-responsive">
+                <h3>Koszty dostawców/podwykonawców</h3>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>L.p</th>
+                        <th>Typ</th>
+                        <th>Nazwa</th>
+                        <th>Koszt</th>
+                        <th>Opis</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="investityCost,counter : ${investityCosts}">
+                        <td><span th:text="${counter.count}"/></td>
+                        <td><span th:text="${investityCost.getSupplier().getType()}"/></td>
+                        <td><span th:text="${investityCost.getSupplier().getName()}"/></td>
+                        <td><span th:text="${investityCost.getCost()}"/> zł</td>
+                        <td><span th:text="${investityCost.getDescription()}"/></td>
+                        <td><a class="btn btn-success" th:href="@{/admin/investity/info/editcost?id={id}(id=${investityCost.getId()})}">Edytuj</a>
+                            <a class="btn btn-danger" th:href="@{/admin/investity/info/deletecost?id={id}(id=${investityCost.getId()})}"
+                               th:onclick="return confirm('Czy chcesz usunąć inwestycję?')">Usuń</a>
+                    </tr>
+                    </tbody>
+                </table>
+                <h3>Koszty pracowników</h3>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>L.p</th>
+                        <th>Pracownik</th>
+                        <th>Ilość godzin z mnożnikiem 1</th>
+                        <th>Ilość godzin z innym mnożnikiem</th>
+                        <th>Koszt</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="users,counter : ${allUsers}">
+                        <td><span th:text="${counter.count}"/></td>
+                        <td><span th:text="${users.getFirstName() + ' ' + users.getLastName()}"/></td>
+                        <td><span th:text="${allHoursByUserInInvestityMultiplierOne.get(users.getId())}"/></td>
+                        <td><span th:text="${allHoursByUserInInvestityMultiplierOther.get(users.getId())}"/></td>
+                        <td><span th:text="${getAllCostsByUserInInvestity.get(users.getId())}"/> zł</td>
+                        <td><a class="btn btn-info" th:href="@{/admin/investity/info/showuserinfo?userid={userid}&investityid={investityid}(userid=${users.getId()},investityid=${investity.getId()})}">
+                            Szczegóły</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="admin/fragments/footer :: footer"></div>
 </body>
 </html>

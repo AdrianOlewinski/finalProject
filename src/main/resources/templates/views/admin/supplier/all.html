@@ -1,29 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Wszyscy dostawcy</title>
+    <div th:replace="admin/fragments/head.html :: head"></div>
+
+    <title>Dostawcy/Podwykonawcy</title>
 </head>
 <body>
-<h2>Dostawcy</h2>
-<table>
-    <tr>
-        <th>L.p</th>
-        <th>Nazwa</th>
-        <th>Typ</th>
-        <th>Opis</th>
-        <th>Akcja</th>
-    </tr>
-    <tr th:each="supplier : ${suppliers}">
-        <td><span th:text="${supplier.getId()}"/></td>
-        <td><span th:text="${supplier.getName()}"/></td>
-        <td><span th:text="${supplier.getType()}"/></td>
-        <td><span th:text="${supplier.getDescription()}"/></td>
-        <td><a th:href="@{/admin/supplier/edit?id={id}(id=${supplier.getId()})}">Edytuj</a>
-            <a th:href="@{/admin/supplier/delete?id={id}(id=${supplier.getId()})}"
-               th:onclick="return confirm('Czy chcesz usunąć dostawcę?')">Usuń</a></td>
-    </tr>
-</table>
-<p><h5>Dashboard: <a href="/admin/dashboard">Dashboard</a></h5></p>
+<div th:insert="admin/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/fragments/sidebar :: sidebar"></nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Dostawcy/Podwykonawcy</h1>
+
+            </div>
+            <h2>Wszyscy Dostawcy</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>L.p</th>
+                        <th>Nazwa</th>
+                        <th>Typ</th>
+                        <th>Opis</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="supplier,counter : ${suppliers}">
+                        <td><span th:text="${counter.count}"/></td>
+                        <td><span th:text="${supplier.getName()}"/></td>
+                        <td><span th:text="${supplier.getType()}"/></td>
+                        <td><span th:text="${supplier.getDescription()}"/></td>
+                        <td><a class="btn btn-success" th:href="@{/admin/supplier/edit?id={id}(id=${supplier.getId()})}">Edytuj</a>
+                            <a class="btn btn-danger" th:href="@{/admin/supplier/delete?id={id}(id=${supplier.getId()})}"
+                               th:onclick="return confirm('Czy chcesz usunąć dostawcę?')">Usuń</a></td>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="admin/fragments/footer :: footer"></div>
 </body>
 </html>

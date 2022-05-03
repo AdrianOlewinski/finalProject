@@ -1,33 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Godziny</title>
+    <div th:replace="admin/fragments/head.html :: head"></div>
+
+    <title>Podsumowanie</title>
 </head>
 <body>
-<h2>Godziny użytkownika <span th:text="${user.getFirstName()+' '+user.getLastName()}"/></h2>
-<table>
-    <tr>
-        <th>L.p</th>
-        <th>Data</th>
-        <th>Dzień tygodnia</th>
-        <th>Inwestycja</th>
-        <th>Liczba godzin</th>
-        <th>Stawka godzinowa</th>
-        <th>Akcja</th>
-    </tr>
-    <tr th:each="workingTime : ${workingTime}">
-        <td><span th:text="${workingTime.getId()}">Id</span></td>
-        <td><span th:text="${workingTime.getLocalDate()}">Date</span></td>
-        <td><span th:text="${dayOfWeekMap.get(workingTime.getLocalDate().getDayOfWeek())}">Date</span></td>
-        <td><span th:text="${workingTime.getInvestity().getInvestityName()}">Investity</span></td>
-        <td><span th:text="${workingTime.getNumberOfHours()}">Number of Hours</span></td>
-        <td><span th:text="${workingTime.getSalaryPerHours()}"/></td>
-        <td><a th:href="@{/admin/workingtime/edit?id={id}(id=${workingTime.getId()})}">Edytuj</a>
-            <a th:href="@{/admin/workingtime/delete?id={id}(id=${workingTime.getId()})}"
-               th:onclick="return confirm('Czy chcesz usunąć godziny')">Usuń</a></td>
-    </tr>
-</table>
-<p><h5>Dashboard: <a href="/admin/dashboard">Dashboard</a></h5></p>
+<div th:insert="admin/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/fragments/sidebar :: sidebar"></nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Podsumowanie godzin</h1>
+
+            </div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Godziny użytkownika <span th:text="${user.getFirstName()+' '+user.getLastName()}"/></h1>
+
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>L.p</th>
+                        <th>Data</th>
+                        <th>Dzień tygodnia</th>
+                        <th>Inwestycja</th>
+                        <th>Liczba godzin</th>
+                        <th>Stawka godzinowa</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="workingTime, counter : ${workingTime}">
+                        <td><span th:text="${counter.count}">Id</span></td>
+                        <td><span th:text="${workingTime.getLocalDate()}">Date</span></td>
+                        <td><span th:text="${dayOfWeekMap.get(workingTime.getLocalDate().getDayOfWeek())}">Date</span></td>
+                        <td><span th:text="${workingTime.getInvestity().getInvestityName()}">Investity</span></td>
+                        <td><span th:text="${workingTime.getNumberOfHours()}">Number of Hours</span></td>
+                        <td><span th:text="${workingTime.getSalaryPerHours()}"/> zł</td>
+                        <td><a class="btn btn-success" th:href="@{/admin/workingtime/edit?id={id}(id=${workingTime.getId()})}">Edytuj</a>
+                            <a class="btn btn-danger" th:href="@{/admin/workingtime/delete?id={id}(id=${workingTime.getId()})}"
+                               th:onclick="return confirm('Czy chcesz usunąć godziny')">Usuń</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="admin/fragments/footer :: footer"></div>
 </body>
 </html>

@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.coderslab.entity.Role;
+import pl.coderslab.entity.Supplier;
 import pl.coderslab.entity.User;
 import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.repository.RoleReposiotry;
@@ -106,12 +107,16 @@ public class UserService {
     }
 
     public boolean isUsernameTaken(User user) {
-        if (user.getUsername().equals(userReposiotry.findById(user.getId())
-                .orElseThrow(() -> new EntityNotFoundException(user.getId())).getUsername())) {
-            return false;
+        boolean result = false;
+        if (user.getId() == 0) {
+            result = userReposiotry.findByUsername(user.getUsername()).isPresent();
+        } else if (user.getUsername().equals(userReposiotry
+                .findById(user.getId()).orElseThrow(() -> new EntityNotFoundException(user.getId())).getUsername())) {
+            result = false;
         } else {
-            return userReposiotry.findByUsername(user.getUsername()).isPresent();
+            result = userReposiotry.findByUsername(user.getUsername()).isPresent();
         }
+        return result;
     }
 
 }

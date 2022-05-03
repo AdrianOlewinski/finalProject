@@ -53,7 +53,7 @@ public class WorkingTimeController {
     @PostMapping (path = "user/workingtime/add")
     @Secured("ROLE_USER")
     String addNewWorkingTime(@Valid WorkingTime workingTime,BindingResult result){
-        if(workingTimeService.isNumberOfHoursInOneDayBiggerThan24Add(workingTime)){
+        if(workingTimeService.isNumberOfHoursInOneDayBiggerThan24(workingTime)){
             result.addError(new FieldError("workingTime", "numberOfHours"
                     , "Nie może w jednym dniu być więcej godzin niż 24!!"));
         }
@@ -122,7 +122,7 @@ public class WorkingTimeController {
     @Secured("ROLE_USER")
     String editWorkingTime(@Valid WorkingTime workingTime, BindingResult result,
                            @AuthenticationPrincipal CurrentUser currentUser){
-        if(workingTimeService.isNumberOfHoursInOneDayBiggerThan24Add(workingTime)){
+        if(workingTimeService.isNumberOfHoursInOneDayBiggerThan24(workingTime)){
             result.addError(new FieldError("workingTime", "numberOfHours"
                     , "Nie może w jednym dniu być więcej godzin niż 24!!"));
         }
@@ -152,15 +152,18 @@ public class WorkingTimeController {
     String showWorkingTimeSummary(Model model){
         LocalDate localDate = LocalDate.now();
         List<User> users = userService.findAllUsers();
-        Map<Long,Integer> allHours = workingTimeService
-                .getAllHoursInMonthAndYear(localDate.getMonth(),localDate.getYear());
+        Map<Long,Double> allHoursWithMultiplierOne = workingTimeService
+                .getAllHoursByUserInMonthWithMultiplierOne(localDate.getMonth(),localDate.getYear());
+        Map<Long,Double> allHoursWithOtherMultiplier = workingTimeService
+                .getAllHoursByUserInMonthWithOtherMultiplier(localDate.getMonth(),localDate.getYear());
         Map<Long,Double> allCosts = workingTimeService
                 .getAllCostsInMonthAndYear(localDate.getMonth(), localDate.getYear());
 
         model.addAttribute("month", localDate.getMonth());
         model.addAttribute("year", localDate.getYear());
         model.addAttribute("users",users);
-        model.addAttribute("allHours", allHours);
+        model.addAttribute("allHoursWithMultiplierOne", allHoursWithMultiplierOne);
+        model.addAttribute("allHoursWithOtherMultiplier", allHoursWithOtherMultiplier);
         model.addAttribute("allCosts", allCosts);
         return "admin/workingtime/all";
     }
@@ -172,15 +175,18 @@ public class WorkingTimeController {
         Month month = yearMonth.getMonth();
         int year = yearMonth.getYear();
         List<User> users = userService.findAllUsers();
-        Map<Long,Integer> allHours = workingTimeService
-                .getAllHoursInMonthAndYear(month,year);
+        Map<Long,Double> allHoursWithMultiplierOne = workingTimeService
+                .getAllHoursByUserInMonthWithMultiplierOne(month,year);
+        Map<Long,Double> allHoursWithOtherMultiplier = workingTimeService
+                .getAllHoursByUserInMonthWithOtherMultiplier(month,year);
         Map<Long,Double> allCosts = workingTimeService
                 .getAllCostsInMonthAndYear(month,year);
 
         model.addAttribute("month",month);
         model.addAttribute("year",year);
         model.addAttribute("users",users);
-        model.addAttribute("allHours", allHours);
+        model.addAttribute("allHoursWithMultiplierOne",allHoursWithMultiplierOne);
+        model.addAttribute("allHoursWithOtherMultiplier",allHoursWithOtherMultiplier);
         model.addAttribute("allCosts", allCosts);
         return "admin/workingtime/all";
     }
@@ -215,7 +221,14 @@ public class WorkingTimeController {
     }
     @PostMapping(path ="admin/workingtime/edit")
     @Secured("ROLE_ADMIN")
-    String editWorkingTimeByAdmin (@ModelAttribute WorkingTime workingTime){
+    String editWorkingTimeByAdmin (@Valid WorkingTime workingTime, BindingResult result){
+        if(workingTimeService.isNumberOfHoursInOneDayBiggerThan24(workingTime)){
+            result.addError(new FieldError("workingTime", "numberOfHours"
+                    , "Nie może w jednym dniu być więcej godzin niż 24!!"));
+        }
+        if(result.hasErrors()){
+            return "admin/workingtime/edit";
+        }
         workingTimeService.update(workingTime);
         return "redirect:/admin/workingtime/info?id="+workingTime.getUser().getId()
                 +"&month="+workingTime.getLocalDate().getMonth()+"&year="+workingTime.getLocalDate().getYear();

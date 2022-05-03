@@ -1,39 +1,60 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Wszystkie godziny</title>
+    <div th:replace="admin/fragments/head.html :: head"></div>
+
+    <title>Inwestycje</title>
 </head>
 <body>
-<h2>Wszytkie godziny użytkownika <span th:text="${user.getFirstName() + ' ' + user.getLastName()}"/> na Inwestycji -
-<span th:text="${investity.getInvestityName()}"/></h2>
-<table>
-    <tr>
-        <th>L.p</th>
-        <th>Data</th>
-        <th>Dzień tygodnia</th>
-        <th>Liczba godzin</th>
-        <th>Stawka godzinowa</th>
-        <th>Mnożnik</th>
-        <th>Koszt</th>
-        <th>Opis</th>
-        <th>Akcja</th>
-    </tr>
-    <tr th:each="workingTimes : ${workingTime}">
-        <td><span th:text="${workingTimes.getId()}"/></td>
-        <td><span th:text="${workingTimes.getLocalDate()}"/></td>
-        <td><span th:text="${dayOfWeekMap.get(workingTimes.getLocalDate().getDayOfWeek())}"/></td>
-        <td><span th:text="${workingTimes.getNumberOfHours()}"/></td>
-        <td><span th:text="${workingTimes.getSalaryPerHours()}"/></td>
-        <td><span th:text="${workingTimes.getMultiplier()}"/></td>
-        <td><span th:text="${workingTimes.getSalaryPerHours()} * ${workingTimes.getNumberOfHours()}
-        *${workingTimes.getMultiplier()}"/></td>
-        <td><span th:text="${workingTimes.getDescription()}"/></td>
-        <td><a th:href="@{/admin/workingtime/edit?id={id}(id=${workingTimes.getId()})}">Edytuj</a>
-            <a th:href="@{/admin/workingtime/delete?id={id}(id=${workingTimes.getId()})}"
-               th:onclick="return confirm('Czy chcesz usunąć godziny')">Usuń</a></td>
-    </tr>
-</table>
-<p><h5><a th:href="@{/admin/investity/info?id={id}(id=${investity.getId()})}">Powrót</a></h5></p>
+<div th:insert="admin/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/fragments/sidebar :: sidebar"></nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Inwestycje</h1>
+
+            </div>
+            <h2>Wszytkie godziny użytkownika <span th:text="${user.getFirstName() + ' ' + user.getLastName()}"/> na Inwestycji -
+                <span th:text="${investity.getInvestityName()}"/></h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>L.p</th>
+                        <th>Data</th>
+                        <th>Dzień tygodnia</th>
+                        <th>Liczba godzin</th>
+                        <th>Stawka godzinowa</th>
+                        <th>Mnożnik</th>
+                        <th>Koszt</th>
+                        <th>Opis</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="workingTimes,counter : ${workingTime}">
+                        <td><span th:text="${counter.count}"/></td>
+                        <td><span th:text="${workingTimes.getLocalDate()}"/></td>
+                        <td><span th:text="${dayOfWeekMap.get(workingTimes.getLocalDate().getDayOfWeek())}"/></td>
+                        <td><span th:text="${workingTimes.getNumberOfHours()}"/></td>
+                        <td><span th:text="${workingTimes.getSalaryPerHours()}"/> zł</td>
+                        <td><span th:text="${workingTimes.getMultiplier()}"/></td>
+                        <td><span th:text="${workingTimes.getSalaryPerHours()} * ${workingTimes.getNumberOfHours()}
+                            *${workingTimes.getMultiplier()}"/> zł</td>
+                        <td><span th:text="${workingTimes.getDescription()}"/></td>
+                        <td><a class="btn btn-success" th:href="@{/admin/workingtime/edit?id={id}(id=${workingTimes.getId()})}">Edytuj</a>
+                            <a class="btn btn-danger" th:href="@{/admin/workingtime/delete?id={id}(id=${workingTimes.getId()})}"
+                               th:onclick="return confirm('Czy chcesz usunąć godziny')">Usuń</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="admin/fragments/footer :: footer"></div>
 </body>
 </html>

@@ -131,7 +131,7 @@ public class WorkingTimeService {
                 .collect(Collectors.toMap(s->s.getId(),s->sumOfAllCostsInMonthAndYear(s.getId(),month,year)));
     }
 
-    public boolean isNumberOfHoursInOneDayBiggerThan24Add(WorkingTime workingTime){
+    public boolean isNumberOfHoursInOneDayBiggerThan24(WorkingTime workingTime){
         int sumOfHours = workingTimeRepository.findAllByLocalDate(workingTime.getLocalDate())
                 .stream()
                 .map(s->s.getNumberOfHours())
@@ -145,6 +145,31 @@ public class WorkingTimeService {
         }else {
             return true;
         }
+    }
+    public double sumOfAllHoursByUserInMonthWithMultiplierOne(Month month, int year, long userId){
+        return workingTimeRepository.findAllByUser_Id(userId).stream()
+                .filter(s->s.getLocalDate().getMonth()==month && s.getLocalDate().getYear()==year)
+                .filter(s->s.getMultiplier()==1)
+                .map(s->s.getNumberOfHours()).reduce(0,Integer::sum);
+    }
+    public Map<Long, Double> getAllHoursByUserInMonthWithMultiplierOne(Month month, int year){
+        return userRepository.findAll().stream().distinct()
+                .collect(Collectors.toMap(s->s.getId(),s->sumOfAllHoursByUserInMonthWithMultiplierOne(month,year,s.getId())));
+    }
+    public double sumOfAllHoursByUserInMonthWithOtherMultiplier(Month month, int year, long userId){
+        return workingTimeRepository.findAllByUser_Id(userId).stream()
+                .filter(s->s.getLocalDate().getMonth()==month && s.getLocalDate().getYear()==year)
+                .filter(s->s.getMultiplier()!=1)
+                .map(s->s.getNumberOfHours()).reduce(0,Integer::sum);
+    }
+    public Map<Long, Double> getAllHoursByUserInMonthWithOtherMultiplier(Month month, int year){
+        return userRepository.findAll().stream().distinct()
+                .collect(Collectors.toMap(s->s.getId(),s->sumOfAllHoursByUserInMonthWithOtherMultiplier(month,year,s.getId())));
+    }
+
+    public double sumOfAllInvestityCost(long investityId){
+        return workingTimeRepository.findAllByInvestity_Id(investityId).stream()
+                .mapToDouble(s -> s.getMultiplier()*s.getNumberOfHours()*s.getSalaryPerHours()).sum();
     }
 
 }
