@@ -26,7 +26,7 @@ public class User {
     private String password;
 
 
-    @Email
+    @Email(message = "To nie jest adres e-mail!")
     private String email;
 
     private String firstName;

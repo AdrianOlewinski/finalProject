@@ -5,6 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.entity.CurrentUser;
 import pl.coderslab.entity.Investity;
@@ -33,6 +34,7 @@ public class WorkingTimeController {
         this.userService = userService;
     }
 
+
     @Secured("ROLE_USER")
     @GetMapping (path = "user/workingtime/add")
     String addNewWorkingTime(Model model, @AuthenticationPrincipal CurrentUser currentUser){
@@ -51,10 +53,17 @@ public class WorkingTimeController {
     @PostMapping (path = "user/workingtime/add")
     @Secured("ROLE_USER")
     String addNewWorkingTime(@Valid WorkingTime workingTime,BindingResult result){
+        if(workingTimeService.isNumberOfHoursInOneDayBiggerThan24Add(workingTime)){
+            result.addError(new FieldError("workingTime", "numberOfHours"
+                    , "Nie może w jednym dniu być więcej godzin niż 24!!"));
+        }
+
         if(result.hasErrors()){
             return "user/workingtime/add";
         }
-        return workingTimeService.addNewWorkingTime(workingTime);
+        System.out.println(workingTime);
+        workingTimeService.addNewWorkingTime(workingTime);
+        return "redirect:/user/workingtime/all";
     }
 
     @GetMapping (path = "user/workingtime/all")
@@ -98,25 +107,43 @@ public class WorkingTimeController {
 
     @GetMapping (path = "user/workingtime/edit")
     @Secured("ROLE_USER")
-    String editWorkingTime(@RequestParam long id, Model model){
-        Optional<WorkingTime> workingTime = workingTimeService.findById(id);
-        model.addAttribute("workingTime", workingTime.orElseThrow(()->new EntityNotFoundException(id)));
+    String editWorkingTime(@RequestParam long id, Model model
+            , @AuthenticationPrincipal CurrentUser currentUser) throws IllegalAccessException{
+        User user = currentUser.getUser();
+        WorkingTime workingTime = workingTimeService.findById(id).orElseThrow(()->new EntityNotFoundException(id));
+        if(workingTime.getUser().getId() != user.getId()){
+            throw new IllegalAccessException("Brak dostępu!");
+        }
+        model.addAttribute("workingTime", workingTime);
         return "user/workingtime/edit";
     }
 
     @PostMapping (path = "user/workingtime/edit")
     @Secured("ROLE_USER")
-    String editWorkingTime(@ModelAttribute WorkingTime workingTime,
+    String editWorkingTime(@Valid WorkingTime workingTime, BindingResult result,
                            @AuthenticationPrincipal CurrentUser currentUser){
-        workingTimeService.updateByUser(workingTime,currentUser.getUser());
+        if(workingTimeService.isNumberOfHoursInOneDayBiggerThan24Add(workingTime)){
+            result.addError(new FieldError("workingTime", "numberOfHours"
+                    , "Nie może w jednym dniu być więcej godzin niż 24!!"));
+        }
+        if(result.hasErrors()){
+            return "user/workingtime/edit";
+        }
+        System.out.println(workingTime);
+        workingTimeService.update(workingTime);
         return "redirect:/user/workingtime/all";
     }
 
     @GetMapping(path = "user/workingtime/delete")
     @Secured("ROLE_USER")
-    String deleteWorkingTime(@RequestParam long id){
-        Optional<WorkingTime> workingTime = workingTimeService.findById(id);
-        workingTimeService.deleteById(workingTime.orElseThrow(()->new EntityNotFoundException(id)).getId());
+    String deleteWorkingTime(@RequestParam long id, @AuthenticationPrincipal CurrentUser currentUser)
+            throws IllegalAccessException{
+        User user = currentUser.getUser();
+        WorkingTime workingTime = workingTimeService.findById(id).orElseThrow(()->new EntityNotFoundException(id));
+        if(workingTime.getUser().getId() != user.getId()){
+            throw new IllegalAccessException("Brak dostępu!");
+        }
+        workingTimeService.deleteById(workingTime.getId());
         return "redirect:/user/workingtime/all";
     }
 

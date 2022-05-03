@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.coderslab.entity.Role;
 import pl.coderslab.entity.User;
+import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.repository.RoleReposiotry;
 import pl.coderslab.repository.UserRepository;
 
@@ -26,15 +27,24 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> findAll(){
+    public List<User> findAll() {
         return userReposiotry.findAll();
     }
 
-    public User findByUsername(String login) { return userReposiotry.findByUsername(login); };
+    public User findByUsername(String login) {
+        return userReposiotry
+                .findByUsername(login).orElseThrow(() -> new EntityNotFoundException(login));
+    }
 
-    public Optional<User> findByUserId (Long id) { return userReposiotry.findById(id); };
+    ;
 
-    public void updateByUser(User user){
+    public Optional<User> findByUserId(Long id) {
+        return userReposiotry.findById(id);
+    }
+
+    ;
+
+    public void updateByUser(User user) {
         String password = userReposiotry.findById(user.getId()).get().getPassword();
         user.setPassword(password);
         Role userRole = roleReposiotry.findByName("ROLE_USER");
@@ -42,30 +52,35 @@ public class UserService {
         userReposiotry.save(user);
     }
 
-    public void changePassword (User user, String oldPass, String newPass1, String newPass2){
-        String password = userReposiotry.findById(user.getId()).get().getPassword();;
-        if(passwordEncoder.matches(oldPass,password) && newPass1.equals(newPass2)){
-                user.setPassword(passwordEncoder.encode(newPass1));
-                userReposiotry.save(user);
-            }else{
-            System.out.println("Niepoprawne stare hasło lub nowe hasła się nie zgadzają");
-        }
+    //    public void changePassword (User user, String oldPass, String newPass1, String newPass2){
+//        String password = userReposiotry.findById(user.getId()).get().getPassword();;
+//        if(passwordEncoder.matches(oldPass,password) && newPass1.equals(newPass2)){
+//                user.setPassword(passwordEncoder.encode(newPass1));
+//                userReposiotry.save(user);
+//            }else{
+//            System.out.println("Niepoprawne stare hasło lub nowe hasła się nie zgadzają");
+//        }
+//    }
+    public void changePassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userReposiotry.save(user);
     }
 
-    public List<User> findAllAdmins(){
+    public List<User> findAllAdmins() {
         Role role = roleReposiotry.findByName("ROLE_ADMIN");
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         return userReposiotry.findAllByRolesIsIn(roles);
     }
-    public List<User> findAllUsers(){
+
+    public List<User> findAllUsers() {
         Role role = roleReposiotry.findByName("ROLE_USER");
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         return userReposiotry.findAllByRolesIsIn(roles);
     }
 
-    public void addNewUser(User user){
+    public void addNewUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role role = roleReposiotry.findByName("ROLE_USER");
         Set<Role> roles = new HashSet<>();
@@ -74,7 +89,7 @@ public class UserService {
         userReposiotry.save(user);
     }
 
-    public void editUserByAdmin(User user){
+    public void editUserByAdmin(User user) {
         String password = userReposiotry.findById(user.getId()).get().getPassword();
         user.setPassword(password);
         Role userRole = roleReposiotry.findByName("ROLE_USER");
@@ -82,12 +97,21 @@ public class UserService {
         userReposiotry.save(user);
     }
 
-    public void deleteUserById(long id){
+    public void deleteUserById(long id) {
         Optional<User> user = userReposiotry.findById(id);
         Role role = roleReposiotry.findByName("ROLE_INACTIVE");
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.get().setRoles(roles);
+    }
+
+    public boolean isUsernameTaken(User user) {
+        if (user.getUsername().equals(userReposiotry.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException(user.getId())).getUsername())) {
+            return false;
+        } else {
+            return userReposiotry.findByUsername(user.getUsername()).isPresent();
+        }
     }
 
 }

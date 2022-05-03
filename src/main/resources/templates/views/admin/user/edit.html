@@ -1,21 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Edycja użytkownika</title>
+    <div th:replace="admin/fragments/head.html :: head"></div>
+    <title>Użytkownicy</title>
 </head>
 <body>
-<form action="/admin/user/edit" th:object="${user}" method="post">
-    <input type="hidden" th:field="*{id}">
-    <p>Login: <input type="text" th:field="*{username}" /></p>
-    <p>Imię: <input type="text" th:field="*{firstName}" /></p>
-    <p>Nazwisko: <input type="text" th:field="*{lastName}" /></p>
-    <p>E-mail: <input type="email" th:field="*{email}" /></p>
-    <p>Numer telefonu: <input type="tel" th:field="*{phoneNumber}" /></p>
-    <p>Zarobki na godzinę: <input type="number" th:field="*{salaryPerHours}" /></p>
-    <p><input type="submit" value="Submit"/></p>
-</form>
-<p><h3><a href="/admin/user/all">Powrót</a></h3></p>
+<div th:insert="admin/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/fragments/sidebar :: sidebar"></nav>
 
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Użytkownicy</h1>
+
+            </div>
+            <h2>Edytuj</h2>
+            <div class="table-responsive">
+                <form action="/admin/user/edit" th:object="${user}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    <input type="hidden" th:field="*{password}">
+                    <div class="mb-3">
+                        <label for="login" class="form-label">Login</label>
+                        <input type="text" th:field="*{username}" class="form-control" id="login" th:errorclass="is-invalid"/>
+                        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Imię</label>
+                        <input type="text" th:field="*{firstName}" class="form-control" id="name"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="surname" class="form-label">Nazwisko</label>
+                        <input type="text" th:field="*{lastName}" class="form-control" id="surname"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" th:field="*{email}" class="form-control" id="email" th:errorclass="is-invalid"/>
+                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phonenumber" class="form-label">Numer telefonu</label>
+                        <input type="tel" th:field="*{phoneNumber}" class="form-control" id="phonenumber"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="salary" class="form-label">Stawka godzinowa</label>
+                        <input type="tel" th:field="*{salaryPerHours}" class="form-control" id="salary" th:errorclass="is-invalid"/>
+                        <div th:if="${#fields.hasErrors('salaryPerHours')}" th:errors="*{salaryPerHours}" class="invalid-feedback"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Wyślij</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="admin/fragments/footer :: footer"></div>
 </body>
 </html>

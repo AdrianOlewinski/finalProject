@@ -2,7 +2,6 @@ package pl.coderslab.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.view.RedirectView;
 import pl.coderslab.entity.Investity;
 import pl.coderslab.entity.User;
 import pl.coderslab.entity.WorkingTime;
@@ -33,16 +32,8 @@ public class WorkingTimeService {
         this.roleReposiotry = roleReposiotry;
     }
 
-    public String addNewWorkingTime (WorkingTime workingTime){
-        int sumOfHours = workingTimeRepository.findAllByLocalDate(workingTime.getLocalDate())
-                .stream().map(s->s.getNumberOfHours()).reduce(0,Integer::sum);
-
-        if (sumOfHours + workingTime.getNumberOfHours() <= 24){
+    public void addNewWorkingTime (WorkingTime workingTime){
             workingTimeRepository.save(workingTime);
-            return "redirect:/user/workingtime/all";
-        }else {
-            return "redirect:/user/error?error=suma godzin nie może być większa od 24!";
-        }
     }
 
     public void updateByUser (WorkingTime workingTime, User currentUser){
@@ -64,7 +55,7 @@ public class WorkingTimeService {
         return workingTimeRepository.findAllByUser_IdOrderByLocalDateDesc(userId);
     }
 
-    public Optional findById(long id){
+    public Optional<WorkingTime> findById(long id){
         return workingTimeRepository.findById(id);
     }
 
@@ -140,7 +131,20 @@ public class WorkingTimeService {
                 .collect(Collectors.toMap(s->s.getId(),s->sumOfAllCostsInMonthAndYear(s.getId(),month,year)));
     }
 
-
-
+    public boolean isNumberOfHoursInOneDayBiggerThan24Add(WorkingTime workingTime){
+        int sumOfHours = workingTimeRepository.findAllByLocalDate(workingTime.getLocalDate())
+                .stream()
+                .map(s->s.getNumberOfHours())
+                .reduce(0,Integer::sum);
+        if(workingTime.getId() != 0){
+            sumOfHours = sumOfHours - workingTimeRepository.findById(workingTime.getId())
+                    .orElseThrow(()->new EntityNotFoundException(workingTime.getId())).getNumberOfHours();
+        }
+        if (sumOfHours + workingTime.getNumberOfHours() <= 24){
+            return false;
+        }else {
+            return true;
+        }
+    }
 
 }

@@ -1,21 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Edytuj dostawcę</title>
+    <div th:replace="admin/fragments/head.html :: head"></div>
+    <title>Dostawcy/Podwykonawcy</title>
 </head>
 <body>
-<form action="/admin/supplier/edit" th:object="${supplier}" method="post">
-    <input type="hidden" th:field="*{id}">
-    <p>Nazwa: <input type="text" th:field="*{name}" /></p>
-    <p>Typ: <select type="text" th:field="*{type}">
-        <option th:value="Dostawca">Dostawca</option>
-        <option th:value="Podwykonawca">Podwykonawca</option>
-    </select></p>
-    <p>Opis: <input type="text" th:field="*{description}"></p>
-    <p><input type="submit" value="Submit"/></p>
-</form>
-<p><h3><a href="/admin/supplier/all">Powrót</a></h3></p>
+<div th:insert="admin/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/fragments/sidebar :: sidebar"></nav>
 
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Dostawcy/Podwykonawcy</h1>
+            </div>
+            <h2>Edytuj</h2>
+            <div class="table-responsive">
+                <form action="/admin/supplier/edit" th:object="${supplier}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nazwa</label>
+                        <input type="text" th:field="*{name}" class="form-control" id="name"
+                               th:errorclass="is-invalid"/>
+                        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Typ</label>
+                        <select th:field="*{type}" class="form-control" id="type">
+                            <option th:value="Dostawca">Dostawca</option>
+                            <option th:value="Podwykonawca">Podwykonawca</option>
+                            <option th:value="Projektant">Projektant</option>
+                            <option th:value="Wynajem">Wynajem</option>
+                            <option th:value="Inne">Inne</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Opis</label>
+                        <input type="text" th:field="*{description}" class="form-control" id="description"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Wyślij</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="admin/fragments/footer :: footer"></div>
 </body>
 </html>

@@ -1,25 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <div th:replace="user/fragments/head.html :: head"></div>
+
     <title>Godziny pracy</title>
 </head>
 <body>
-<p> Data: <span th:text="${workingTime.getLocalDate()}"></span></p>
-<form action="/user/workingtime/edit" th:object="${workingTime}" method="post">
-    <input type="hidden" th:field="*{id}"/>
-    <input type="hidden" th:field="*{localDate}"/>
-    <input type="hidden" th:field="*{salaryPerHours}"/>
-    <input type="hidden" th:field="*{user}"/>
-    <p>Inwestycja: <select th:field="*{investity}">
-        <option th:each="option : ${investity}" th:value="${option.getId()}" th:text="${option.getInvestityName()}"></option>
-    </select></p>
-    <p>Liczba godzin: <input type="number" th:field="*{numberOfHours}"/></p>
-    <p>Mnożnik: <input type="number" step="0.1" th:field="*{multiplier}"/></p>
-    <p>Opis: <input type="text" th:field="*{description}"/></p>
-    <p><input type="submit" value="Submit" /></p>
-</form>
-<p><h3>Powrót: <a href="/user/workingtime/all">Wszystkie</a></h3></p>
+<div th:insert="user/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="user/fragments/sidebar :: sidebar"></nav>
 
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Edytuj Godziny</h1>
+
+            </div>
+            <div class="mb-3">
+                <label for="date" class="form-label">Data</label>
+                <span type="text" th:text="${workingTime.getLocalDate()}" class="form-control" id="date"/>
+            </div>
+            <h2>Edytuj godziny</h2>
+            <div class="table-responsive">
+                <form action="/user/workingtime/edit" th:object="${workingTime}" method="post">
+                    <input type="hidden" th:field="*{id}"/>
+                    <input type="hidden" th:field="*{user}"/>
+                    <input type="hidden" th:field="*{salaryPerHours}"/>
+                    <input type="hidden" th:field="*{localDate}"/>
+                    <div class="mb-3">
+                        <label for="investity" class="form-label">Inwestycja</label>
+                        <select th:field="*{investity}" class="form-control" id="investity">
+                            <option th:each="option : ${investity}" th:value="${option.getId()}"
+                                    th:text="${option.getInvestityName()}"></option></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hours" class="form-label">Liczba godzin</label>
+                        <input type="number" step="1" th:field="*{numberOfHours}" class="form-control" id="hours" th:errorclass="is-invalid"/>
+                        <div th:if="${#fields.hasErrors('numberOfHours')}" th:errors="*{numberOfHours}" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="multiplier" class="form-label">Mnożnik</label>
+                        <input type="number" step="0.1" th:field="*{multiplier}" class="form-control" id="multiplier" th:errorclass="is-invalid"/>
+                        <div th:if="${#fields.hasErrors('multiplier')}" th:errors="*{multiplier}" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Opis</label>
+                        <input type="text" step="1" th:field="*{description}" class="form-control" id="description"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Wyślij</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="user/fragments/footer :: footer"></div>
 </body>
 </html>

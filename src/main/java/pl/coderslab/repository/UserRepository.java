@@ -6,11 +6,12 @@ import pl.coderslab.entity.Role;
 import pl.coderslab.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository <User, Long> {
-    User findByUsername (String username);
+    Optional<User> findByUsername (String username);
 
     List<User> findAllByRolesIsIn(Set<Role>roles);
 

@@ -1,16 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Dodaj inwestycję</title>
+    <div th:replace="admin/fragments/head.html :: head"></div>
+    <title>Inwestycje</title>
 </head>
 <body>
-<form action="/admin/investity/add" th:object="${investity}" method="post">
-    <p>Nazwa: <input type="text" th:field="*{investityName}" /></p>
-    <p>Budżet: <input type="number" th:field="*{budget}" /></p>
-    <p><input type="submit" value="Submit"/></p>
-</form>
-<p><h3><a href="/admin/investity/all">Powrót</a></h3></p>
+<div th:insert="admin/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/fragments/sidebar :: sidebar"></nav>
 
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Inwestycje</h1>
+
+            </div>
+            <h2>Dodaj</h2>
+            <div class="table-responsive">
+                <form action="/admin/investity/add" th:object="${investity}" method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nazwa</label>
+                        <input type="text" th:field="*{investityName}" class="form-control" id="name" th:errorclass="is-invalid"/>
+                        <div th:if="${#fields.hasErrors('investityName')}" th:errors="*{investityName}" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="budget" class="form-label">Budżet</label>
+                        <input type="number" step="1" th:field="*{budget}" class="form-control" id="budget" th:errorclass="is-invalid"/>
+                        <div th:if="${#fields.hasErrors('budget')}" th:errors="*{budget}" class="invalid-feedback"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Wyślij</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="admin/fragments/footer :: footer"></div>
 </body>
 </html>

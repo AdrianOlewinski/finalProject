@@ -28,7 +28,7 @@ public class WorkingTime {
     private Investity investity;
 
     @NotNull
-    @Min(value = 0, message = "Wartość nie może być większa od 0!")
+    @Min(value = 0, message = "Wartość nie może być mniejsza od 0!")
     @Max(value = 24, message = "Wartość nie może być większa od 24!")
     private int numberOfHours;
 

@@ -39,8 +39,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="workingTime : ${allworkingtime}">
-                        <td><span th:text="${workingTime.getId()}">Id</span></td>
+                    <tr th:each="workingTime, counter : ${allworkingtime}">
+                        <td><span th:text="${counter.count}"/>
                         <td><span th:text="${workingTime.getLocalDate()}">Date</span></td>
                         <td><span th:text="${dayOfWeekMap.get(workingTime.getLocalDate().getDayOfWeek())}"/></td>
                         <td><span th:text="${workingTime.getInvestity().getInvestityName()}">Investity</span></td>
