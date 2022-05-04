@@ -6,13 +6,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletRequest;
+
 @ControllerAdvice
 public class EntityNotFoundAdvice {
 
-
-    @ExceptionHandler
+    @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String entityNotFoundHandler(EntityNotFoundException e){
-        return "redirect:/";
+    public Error entityNotFoundHandler(EntityNotFoundException e, HttpServletRequest request){
+        Error error = new Error(404,e.getMessage(),request.getServletPath());
+        return error;
     }
 }

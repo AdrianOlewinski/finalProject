@@ -111,7 +111,8 @@ public class UserService {
         if (user.getId() == 0) {
             result = userReposiotry.findByUsername(user.getUsername()).isPresent();
         } else if (user.getUsername().equals(userReposiotry
-                .findById(user.getId()).orElseThrow(() -> new EntityNotFoundException(user.getId())).getUsername())) {
+                .findById(user.getId()).orElseThrow(() ->
+                        new EntityNotFoundException("Could not found user " + user.getId())).getUsername())) {
             result = false;
         } else {
             result = userReposiotry.findByUsername(user.getUsername()).isPresent();

@@ -64,7 +64,8 @@ public class WorkingTimeService {
         if(workingTimeRepository.findFirstByUser_IdOrderByLocalDateDesc(id).isPresent()){
             investity = workingTimeRepository.findFirstByUser_IdOrderByLocalDateDesc(id).get().getInvestity();
         }else{
-            investity = investityRepository.findById(1l).orElseThrow(()->new EntityNotFoundException(id));
+            investity = investityRepository.findById(1l)
+                    .orElseThrow(()->new EntityNotFoundException("Could not found investity " + id));
         }
         return investity;
     }
@@ -138,7 +139,8 @@ public class WorkingTimeService {
                 .reduce(0,Integer::sum);
         if(workingTime.getId() != 0){
             sumOfHours = sumOfHours - workingTimeRepository.findById(workingTime.getId())
-                    .orElseThrow(()->new EntityNotFoundException(workingTime.getId())).getNumberOfHours();
+                    .orElseThrow(()->new EntityNotFoundException
+                            ("Could not found workingtime " + workingTime.getId())).getNumberOfHours();
         }
         if (sumOfHours + workingTime.getNumberOfHours() <= 24){
             return false;

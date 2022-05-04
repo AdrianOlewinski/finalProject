@@ -49,7 +49,8 @@ public class SupplierService {
         if(supplier.getId()==0){
             result = supplierRepository.findByName(supplier.getName()).isPresent();
         }else if(supplier.getName().equals(supplierRepository
-                .findById(supplier.getId()).orElseThrow(()->new EntityNotFoundException(supplier.getId())).getName())){
+                .findById(supplier.getId())
+                .orElseThrow(()->new EntityNotFoundException("Could not found investity " + supplier.getId())).getName())){
             result = false;
         }else{
             result = supplierRepository.findByName(supplier.getName()).isPresent();

@@ -76,7 +76,8 @@ public class InvestityController {
     @Secured("ROLE_ADMIN")
     String editInvestity(Model model, @RequestParam long id){
         Optional<Investity> investity = investityService.findById(id);
-        model.addAttribute("investity",investity.get());
+        model.addAttribute("investity"
+                ,investity.orElseThrow(()->new EntityNotFoundException("Could not found investity " + id)));
         return "admin/investity/edit";
     }
 
@@ -104,7 +105,8 @@ public class InvestityController {
     @GetMapping(path = "admin/investity/info")
     @Secured("ROLE_ADMIN")
     String showInfo(@RequestParam long id, Model model){
-        Investity investity = investityService.findById(id).orElseThrow(()->new EntityNotFoundException(id));
+        Investity investity = investityService.findById(id)
+                .orElseThrow(()->new EntityNotFoundException("Could not found investity " + id));
         List<InvestityCosts> investityCosts = investityCostsService.findAllByInvestityId(id);
         int sumOfSuppliersCosts = investityCostsService.sumOfAllInvestityCosts(id);
         int sumOfUserCosts = workingTimeService.getAllUserCosts(id);
@@ -135,7 +137,7 @@ public class InvestityController {
     String editInvestityCosts(@RequestParam long id, Model model){
         Optional<InvestityCosts> investityCosts = investityCostsService.findCosts(id);
         model.addAttribute("investityCosts", investityCosts
-                .orElseThrow(()-> new EntityNotFoundException(id)));
+                .orElseThrow(()-> new EntityNotFoundException("Could not found investity costs " + id)));
         return "admin/investity/info/editcost";
     }
     @PostMapping(path = "admin/investity/info/editcost")
@@ -152,7 +154,7 @@ public class InvestityController {
     @Secured("ROLE_ADMIN")
     String deleteInvestityCosts(@RequestParam long id){
         long redirectId = investityCostsService.findCosts(id).orElseThrow(
-                ()->new EntityNotFoundException(id)).getInvestity().getId();
+                ()->new EntityNotFoundException("Could not found investity costs " + id)).getInvestity().getId();
         investityCostsService.deleteById(id);
         return "redirect:/admin/investity/info?id="+redirectId;
     }
@@ -161,7 +163,7 @@ public class InvestityController {
     String addInvestityCosts(Model model, @RequestParam long investityId){
         InvestityCosts investityCosts = new InvestityCosts();
         investityCosts.setInvestity(investityService.findById(investityId)
-                .orElseThrow(()->new EntityNotFoundException(investityId)));
+                .orElseThrow(()->new EntityNotFoundException("Could not found investity " + investityId)));
         model.addAttribute("investityCosts",investityCosts);
         return "admin/investity/info/addcost";
     }
@@ -181,9 +183,9 @@ public class InvestityController {
         List<WorkingTime> workingTime = workingTimeService.findByInvestity_IdAndUser_Id(investityid,userid);
         model.addAttribute("workingTime",workingTime);
         model.addAttribute("user",userService.findByUserId(userid)
-                .orElseThrow(()->new EntityNotFoundException(userid)));
+                .orElseThrow(()->new EntityNotFoundException("Could not found user " + userid)));
         model.addAttribute("investity",investityService.findById(investityid)
-                .orElseThrow(()->new EntityNotFoundException(investityid)));
+                .orElseThrow(()->new EntityNotFoundException("Could not found investity " + investityid)));
         return "admin/investity/info/showuserinfo";
     }
 

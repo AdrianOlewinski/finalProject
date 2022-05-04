@@ -53,7 +53,7 @@ public class InvestityService {
     public Double getInvestityMargin(long id){
         double result;
         Optional<Investity> investity = investityRepository.findById(id);
-        int budget = investity.orElseThrow(()->new EntityNotFoundException(id)).getBudget();
+        int budget = investity.orElseThrow(()->new EntityNotFoundException("Could not found investity " + id)).getBudget();
         int supplierCosts = investityCostsService.sumOfAllInvestityCosts(id);
         int userCosts = workingTimeService.getAllUserCosts(id);
         if(budget == 0){
@@ -75,7 +75,8 @@ public class InvestityService {
         if(investity.getId()==0){
             result = investityRepository.findByInvestityName(investity.getInvestityName()).isPresent();
         }else if(investity.getInvestityName().equals(investityRepository
-                .findById(investity.getId()).orElseThrow(()->new EntityNotFoundException(investity.getId())).getInvestityName())){
+                .findById(investity.getId()).orElseThrow(()->new
+                        EntityNotFoundException("Could not found investity " + investity.getId())).getInvestityName())){
             result = false;
         }else{
             result = investityRepository.findByInvestityName(investity.getInvestityName()).isPresent();

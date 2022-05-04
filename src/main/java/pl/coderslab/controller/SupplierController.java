@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.coderslab.entity.Supplier;
+import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.service.SupplierService;
 
 import javax.validation.Valid;
@@ -58,7 +59,7 @@ public class SupplierController {
     @Secured("ROLE_ADMIN")
     String editSupplier(Model model, @RequestParam long id){
         Optional<Supplier> supplier = supplierService.findById(id);
-        model.addAttribute("supplier",supplier.get());
+        model.addAttribute("supplier",supplier.orElseThrow(()->new EntityNotFoundException("Could not found supplier " + id)));
         return "admin/supplier/edit";
     }
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.entity.CurrentUser;
 import pl.coderslab.entity.Password;
 import pl.coderslab.entity.User;
+import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.service.UserService;
 
 import javax.validation.Valid;
@@ -132,7 +133,7 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     String editUserByAdmin(Model model, @RequestParam long id) {
         Optional<User> user = userService.findByUserId(id);
-        model.addAttribute("user", user.get());
+        model.addAttribute("user", user.orElseThrow(()->new EntityNotFoundException("Could not found user " + id)));
         return "admin/user/edit";
     }
 

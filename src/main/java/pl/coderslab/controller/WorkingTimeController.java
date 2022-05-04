@@ -110,7 +110,7 @@ public class WorkingTimeController {
     String editWorkingTime(@RequestParam long id, Model model
             , @AuthenticationPrincipal CurrentUser currentUser) throws IllegalAccessException{
         User user = currentUser.getUser();
-        WorkingTime workingTime = workingTimeService.findById(id).orElseThrow(()->new EntityNotFoundException(id));
+        WorkingTime workingTime = workingTimeService.findById(id).orElseThrow(()->new EntityNotFoundException("Could not found workingtime " + id));
         if(workingTime.getUser().getId() != user.getId()){
             throw new IllegalAccessException("Brak dostępu!");
         }
@@ -139,7 +139,8 @@ public class WorkingTimeController {
     String deleteWorkingTime(@RequestParam long id, @AuthenticationPrincipal CurrentUser currentUser)
             throws IllegalAccessException{
         User user = currentUser.getUser();
-        WorkingTime workingTime = workingTimeService.findById(id).orElseThrow(()->new EntityNotFoundException(id));
+        WorkingTime workingTime = workingTimeService.findById(id)
+                .orElseThrow(()->new EntityNotFoundException("Could not found workingtime " + id));
         if(workingTime.getUser().getId() != user.getId()){
             throw new IllegalAccessException("Brak dostępu!");
         }
@@ -199,14 +200,16 @@ public class WorkingTimeController {
                 .stream().filter(s->s.getLocalDate().getMonth().equals(month)&&s.getLocalDate().getYear()==year)
                 .collect(Collectors.toList());
         model.addAttribute("workingTime",workingTime);
-        model.addAttribute("user",userService.findByUserId(id).orElseThrow(()->new EntityNotFoundException(id)));
+        model.addAttribute("user",userService.findByUserId(id)
+                .orElseThrow(()->new EntityNotFoundException("Could not found user " + id)));
         return "admin/workingtime/info";
     }
     @GetMapping(path ="admin/workingtime/delete")
     @Secured("ROLE_ADMIN")
     String deleteWorkingTimeByAdmin (@RequestParam long id){
         Optional<WorkingTime> workingTimeOptional = workingTimeService.findById(id);
-        WorkingTime workingTime = workingTimeOptional.orElseThrow(()->new EntityNotFoundException(id));
+        WorkingTime workingTime = workingTimeOptional
+                .orElseThrow(()->new EntityNotFoundException("Could not found workingtime " + id));
         workingTimeService.deleteById(id);
         return "redirect:/admin/workingtime/info?id="+workingTime.getUser().getId()
                 +"&month="+workingTime.getLocalDate().getMonth()+"&year="+workingTime.getLocalDate().getYear();
@@ -216,7 +219,7 @@ public class WorkingTimeController {
     String editWorkingTimeByAdmin (@RequestParam long id, Model model){
         Optional<WorkingTime> workingTime = workingTimeService.findById(id);
         model.addAttribute("workingtime",
-                workingTime.orElseThrow((()->new EntityNotFoundException(id))));
+                workingTime.orElseThrow((()->new EntityNotFoundException("Could not found workingtime " + id))));
         return "admin/workingtime/edit";
     }
     @PostMapping(path ="admin/workingtime/edit")
