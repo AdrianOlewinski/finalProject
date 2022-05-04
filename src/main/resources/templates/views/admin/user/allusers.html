@@ -43,7 +43,11 @@
                         <td><span th:text="${user.getSalaryPerHours()}">Salary</span></td>
                         <td><a class="btn btn-success" th:href="@{/admin/user/edit?id={id}(id=${user.getId()})}">Edytuj</a>
                             <a class="btn btn-danger" th:href="@{/admin/user/delete?id={id}(id=${user.getId()})}"
-                               th:onclick="return confirm('Czy chcesz usunąć użytkownika?')">Usuń</a></td>
+                               th:onclick="return confirm('Czy chcesz usunąć użytkownika?')">Usuń</a>
+                            <a class="btn btn-info" th:href="@{/admin/user/changerole?id={id}(id=${user.getId()})}"
+                               th:onclick="return confirm('Czy chcesz zmienić rolę użytkownika?')">Zmień rolę</a>
+                            <a class="btn btn-warning" th:href="@{/admin/user/resetpassword?id={id}(id=${user.getId()})}"
+                               th:onclick="return confirm('Czy chcesz zresetować hasło?')">Resetuj hasło</a></td>
                     </tr>
                     </tbody>
                 </table>

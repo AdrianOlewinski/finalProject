@@ -15,8 +15,7 @@ import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.service.UserService;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class UserController {
@@ -31,13 +30,13 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @GetMapping(path = "admin/dashboard")
     String adminDashboard() {
-        return "admin/newDb";
+        return "redirect:/admin/investity/all";
     }
 
     @Secured("ROLE_USER")
     @GetMapping(path = "user/dashboard")
     String userDashboard() {
-        return "user/newDb";
+        return "redirect:/user/workingtime/add";
     }
 
     @Secured("ROLE_USER")
@@ -59,7 +58,7 @@ public class UserController {
         if (result.hasErrors()) {
             return "user/edit/editdata";
         }
-        userService.updateByUser(user);
+        userService.update(user);
         return "redirect:/user/dashboard";
     }
 
@@ -106,6 +105,13 @@ public class UserController {
         model.addAttribute("admins", users);
         return "admin/user/alladmins";
     }
+    @Secured("ROLE_ADMIN")
+    @GetMapping(path = "admin/user/allinactiveusers")
+    String showInActiveUsers(Model model) {
+        List<User> users = userService.findInactiveUsers();
+        model.addAttribute("users", users);
+        return "admin/user/allinactiveusers";
+    }
 
     @GetMapping(path = "admin/user/add")
     @Secured("ROLE_ADMIN")
@@ -147,7 +153,7 @@ public class UserController {
         if (result.hasErrors()) {
             return "admin/user/edit";
         }
-        userService.editUserByAdmin(user);
+        userService.update(user);
         return "redirect:/admin/user/allusers";
     }
 
@@ -156,6 +162,48 @@ public class UserController {
     String deleteUserByAdmin(@RequestParam long id) {
         userService.deleteUserById(id);
         return "redirect:/admin/user/allusers";
+    }
+
+    @GetMapping(path = "admin/user/resetpassword")
+    @Secured("ROLE_ADMIN")
+    String resetPassword(@RequestParam long id, Model model){
+        Password password = new Password();
+        password.setOldPassword("password");
+        password.setNewPassword2("password");
+        model.addAttribute("user",userService.findByUserId(id)
+                .orElseThrow(()->new EntityNotFoundException("Could not find user id= "+id)));
+        model.addAttribute("password",password);
+        return "admin/user/resetpassword";
+    }
+
+    @PostMapping(path = "admin/user/resetpassword")
+    @Secured("ROLE_ADMIN")
+    String resetPassword(@RequestParam long id, @Valid Password password, BindingResult result){
+        if (result.hasErrors()) {
+            return "admin/user/resetpassword";
+        }
+        userService.changePassword(userService.findByUserId(id).orElseThrow
+                (()->new EntityNotFoundException("Could not find user id= "+id)),password.getNewPassword1());
+        return "redirect:/admin/user/allusers";
+    }
+
+    @GetMapping(path = "admin/user/changerole")
+    @Secured("ROLE_ADMIN")
+    String changeRole(@RequestParam long id){
+        userService.changeRole(id);
+        return "redirect:/admin/user/allusers";
+    }
+
+    @GetMapping(path = "admin/error")
+    @Secured("ROLE_ADMIN")
+    String error(@RequestParam int id, Model model){
+        Map<Integer, String> errors = new HashMap<>();
+        errors.put(1,"Nie możesz usunąć inwestycji, ponieważ do niej są przypisani pracownicy albo dostawcy!");
+        errors.put(2,"Nie możesz usunąć dostawcy, przypisany jest on do jakiejś inwestycji!");
+        String error = errors.get(id);
+        System.out.println(error);
+        model.addAttribute("error",error);
+        return "admin/error";
     }
 
 

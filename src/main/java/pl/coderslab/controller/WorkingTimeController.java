@@ -1,5 +1,6 @@
 package pl.coderslab.controller;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -108,11 +109,11 @@ public class WorkingTimeController {
     @GetMapping (path = "user/workingtime/edit")
     @Secured("ROLE_USER")
     String editWorkingTime(@RequestParam long id, Model model
-            , @AuthenticationPrincipal CurrentUser currentUser) throws IllegalAccessException{
+            , @AuthenticationPrincipal CurrentUser currentUser) throws AccessDeniedException {
         User user = currentUser.getUser();
         WorkingTime workingTime = workingTimeService.findById(id).orElseThrow(()->new EntityNotFoundException("Could not found workingtime " + id));
         if(workingTime.getUser().getId() != user.getId()){
-            throw new IllegalAccessException("Brak dostępu!");
+            throw new AccessDeniedException("Brak dostępu!");
         }
         model.addAttribute("workingTime", workingTime);
         return "user/workingtime/edit";
@@ -137,12 +138,12 @@ public class WorkingTimeController {
     @GetMapping(path = "user/workingtime/delete")
     @Secured("ROLE_USER")
     String deleteWorkingTime(@RequestParam long id, @AuthenticationPrincipal CurrentUser currentUser)
-            throws IllegalAccessException{
+            throws AccessDeniedException{
         User user = currentUser.getUser();
         WorkingTime workingTime = workingTimeService.findById(id)
                 .orElseThrow(()->new EntityNotFoundException("Could not found workingtime " + id));
         if(workingTime.getUser().getId() != user.getId()){
-            throw new IllegalAccessException("Brak dostępu!");
+            throw new AccessDeniedException("Brak dostępu!");
         }
         workingTimeService.deleteById(workingTime.getId());
         return "redirect:/user/workingtime/all";
@@ -275,8 +276,4 @@ public class WorkingTimeController {
         return map;
     }
 
-//    @ModelAttribute("user")
-//    Collection<User> findAllUsers(){
-//        return userService.findAll();
-//    }
 }

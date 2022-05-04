@@ -1,8 +1,13 @@
 package pl.coderslab.entity;
 
+import javax.validation.constraints.NotBlank;
+
 public class Password {
+    @NotBlank(message = "Hasło nie może być puste!")
     private String oldPassword;
+    @NotBlank(message = "Hasło nie może być puste!")
     private String newPassword1;
+    @NotBlank(message = "Hasło nie może być puste!")
     private String newPassword2;
 
     public String getOldPassword() {

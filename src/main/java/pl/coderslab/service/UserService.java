@@ -5,7 +5,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.coderslab.entity.Role;
-import pl.coderslab.entity.Supplier;
 import pl.coderslab.entity.User;
 import pl.coderslab.exception.EntityNotFoundException;
 import pl.coderslab.repository.RoleReposiotry;
@@ -37,31 +36,20 @@ public class UserService {
                 .findByUsername(login).orElseThrow(() -> new EntityNotFoundException(login));
     }
 
-    ;
-
     public Optional<User> findByUserId(Long id) {
         return userReposiotry.findById(id);
     }
 
-    ;
 
-    public void updateByUser(User user) {
+    public void update(User user) {
         String password = userReposiotry.findById(user.getId()).get().getPassword();
         user.setPassword(password);
-        Role userRole = roleReposiotry.findByName("ROLE_USER");
-        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
+        Set<Role> userRoles = userReposiotry.findById(user.getId())
+                .orElseThrow(()-> new EntityNotFoundException("Could not find user id =" + user.getId())).getRoles();
+        user.setRoles(userRoles);
         userReposiotry.save(user);
     }
 
-    //    public void changePassword (User user, String oldPass, String newPass1, String newPass2){
-//        String password = userReposiotry.findById(user.getId()).get().getPassword();;
-//        if(passwordEncoder.matches(oldPass,password) && newPass1.equals(newPass2)){
-//                user.setPassword(passwordEncoder.encode(newPass1));
-//                userReposiotry.save(user);
-//            }else{
-//            System.out.println("Niepoprawne stare hasło lub nowe hasła się nie zgadzają");
-//        }
-//    }
     public void changePassword(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         userReposiotry.save(user);
@@ -81,6 +69,13 @@ public class UserService {
         return userReposiotry.findAllByRolesIsIn(roles);
     }
 
+    public List<User> findInactiveUsers() {
+        Role role = roleReposiotry.findByName("ROLE_INACTIVE");
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        return userReposiotry.findAllByRolesIsIn(roles);
+    }
+
     public void addNewUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role role = roleReposiotry.findByName("ROLE_USER");
@@ -90,13 +85,6 @@ public class UserService {
         userReposiotry.save(user);
     }
 
-    public void editUserByAdmin(User user) {
-        String password = userReposiotry.findById(user.getId()).get().getPassword();
-        user.setPassword(password);
-        Role userRole = roleReposiotry.findByName("ROLE_USER");
-        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
-        userReposiotry.save(user);
-    }
 
     public void deleteUserById(long id) {
         Optional<User> user = userReposiotry.findById(id);
@@ -119,5 +107,25 @@ public class UserService {
         }
         return result;
     }
+
+    public void changeRole (long userId){
+        User user = userReposiotry.findById(userId)
+                .orElseThrow(()->new EntityNotFoundException("Could not find user id= "+userId));
+        Set<Role> roles = user.getRoles();
+        if (roles.contains(roleReposiotry.findByName("ROLE_USER"))){
+            roles.remove(roleReposiotry.findByName("ROLE_USER"));
+            roles.add(roleReposiotry.findByName("ROLE_ADMIN"));
+            user.setRoles(roles);
+        }else if(roles.contains(roleReposiotry.findByName("ROLE_ADMIN"))){
+            roles.remove(roleReposiotry.findByName("ROLE_ADMIN"));
+            roles.add(roleReposiotry.findByName("ROLE_USER"));
+            user.setRoles(roles);
+        }else if(roles.contains(roleReposiotry.findByName("ROLE_INACTIVE"))){
+            roles.remove(roleReposiotry.findByName("ROLE_INACTIVE"));
+            roles.add(roleReposiotry.findByName("ROLE_USER"));
+            user.setRoles(roles);
+        }
+    }
+
 
 }

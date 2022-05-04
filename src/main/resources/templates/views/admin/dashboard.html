@@ -1,22 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <div th:replace="admin/fragments/head.html :: head"></div>
     <title>Dashboard</title>
 </head>
 <body>
-<h2>Admin dashboard</h2>
-<h3>Inwestycje:</h3>
-<h4><a href="/admin/investity/add">Dodaj</a> </h4>
-<h4><a href="/admin/investity/all">Pokaż wszystkie</a> </h4>
-<h3>Dostawcy:</h3>
-<h4><a href="/admin/supplier/add">Dodaj</a> </h4>
-<h4><a href="/admin/supplier/all">Pokaż wszystkie</a> </h4>
-<h3>Użytkownicy:</h3>
-<h4><a href="/admin/user/add">Dodaj</a></h4>
-<h4><a href="/admin/workingtime/all">Podsumowanie godzin pracy</a></h4>
-<h4><a href="/admin/user/allusers">Pokaż wszystkich użytkowników</a></h4>
-<h4><a href="/admin/user/alladmins">Pokaż wszystkich adminów</a></h4>
-<p><h3><a href="/logout">Wyloguj</a></h3></p>
+<div th:insert="admin/fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="admin/fragments/sidebar :: sidebar"></nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Dashboard</h1>
+
+            </div>
+
+            <h2>Section title</h2>
+            <div class="table-responsive">
+
+            </div>
+        </main>
+    </div>
+</div>
+<div th:insert="admin/fragments/footer :: footer"></div>
 </body>
 </html>

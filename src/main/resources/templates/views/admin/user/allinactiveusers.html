@@ -17,36 +17,23 @@
         <h1 class="h2">Użytkownicy</h1>
 
       </div>
-      <h2>Wszyscy admini</h2>
+      <h2>Nieaktywni użytkownicy</h2>
       <div class="table-responsive">
         <table class="table table-bordered">
           <thead>
           <tr>
             <th>L.p</th>
-            <th>Login</th>
             <th>Imię</th>
             <th>Nazwisko</th>
-            <th>E-mail</th>
-            <th>Numer telefonu</th>
             <th>Akcja</th>
           </tr>
           </thead>
           <tbody>
-          <tr th:each="user,counter : ${admins}">
+          <tr th:each="user,counter : ${users}">
             <td><span th:text="${counter.count}">Id</span></td>
-            <td><span th:text="${user.getUsername()}">Login</span></td>
             <td><span th:text="${user.getFirstName()}">Name</span></td>
             <td><span th:text="${user.getLastName()}">Surname</span></td>
-            <td><span th:text="${user.getEmail()}">Email</span></td>
-            <td><span th:text="${user.getPhoneNumber()}">PhoneNumber</span></td>
-            <td><a class="btn btn-success" th:href="@{/admin/user/edit?id={id}(id=${user.getId()})}">Edytuj</a>
-              <a class="btn btn-danger" th:href="@{/admin/user/delete?id={id}(id=${user.getId()})}"
-                 th:onclick="return confirm('Czy chcesz usunąć admina?')">Usuń</a>
-              <a class="btn btn-info" th:href="@{/admin/user/changerole?id={id}(id=${user.getId()})}"
-                 th:onclick="return confirm('Czy chcesz zmienić rolę użytkownika?')">Zmień rolę</a>
-              <a class="btn btn-warning" th:href="@{/admin/user/resetpassword?id={id}(id=${user.getId()})}"
-                 th:onclick="return confirm('Czy chcesz zresetować hasło?')">Resetuj hasło</a></td></td>
-          </tr>
+            <td><a class="btn btn-info" th:href="@{/admin/user/changerole?id={id}(id=${user.getId()})}">Zmień rolę</a></td>
           </tbody>
         </table>
       </div>

@@ -6,11 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.coderslab.entity.Supplier;
 import pl.coderslab.exception.EntityNotFoundException;
+import pl.coderslab.service.InvestityCostsService;
 import pl.coderslab.service.SupplierService;
 
 import javax.validation.Valid;
@@ -20,9 +20,11 @@ import java.util.Optional;
 @Controller
 public class SupplierController {
     private final SupplierService supplierService;
+    private final InvestityCostsService investityCostsService;
 
-    public SupplierController(SupplierService supplierService) {
+    public SupplierController(SupplierService supplierService, InvestityCostsService investityCostsService) {
         this.supplierService = supplierService;
+        this.investityCostsService = investityCostsService;
     }
 
     @GetMapping(path = "admin/supplier/add")
@@ -80,6 +82,9 @@ public class SupplierController {
     @GetMapping(path = "admin/supplier/delete")
     @Secured("ROLE_ADMIN")
     String deleteSupplier(@RequestParam long id){
+        if(investityCostsService.findAllBySupplierId(id).size()>0){
+            return "redirect:/admin/error?id=2";
+        }
         supplierService.deleteSupplierById(id);
         return "redirect:/admin/supplier/all";
     }

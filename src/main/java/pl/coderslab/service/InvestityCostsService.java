@@ -40,6 +40,10 @@ public class InvestityCostsService {
         return investityCostsRepository.findAllByInvestity_Id(id);
     }
 
+    public List<InvestityCosts> findAllBySupplierId (long id){
+        return investityCostsRepository.findAllBySupplier_Id(id);
+    }
+
     public int sumOfAllInvestityCosts(long id){
         return investityCostsRepository.findAllByInvestity_Id(id).stream().map(s -> s.getCost()).reduce(0, Integer::sum);
     }

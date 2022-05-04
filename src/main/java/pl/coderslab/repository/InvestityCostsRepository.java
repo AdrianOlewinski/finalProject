@@ -10,4 +10,5 @@ import java.util.List;
 public interface InvestityCostsRepository extends JpaRepository<InvestityCosts, Long> {
 
     List<InvestityCosts> findAllByInvestity_Id(long id);
+    List<InvestityCosts> findAllBySupplier_Id(long id);
 }
