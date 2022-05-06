@@ -1,6 +1,7 @@
 package pl.coderslab.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,4 +25,6 @@ public class ExceptionNotFoundAdvice {
         Error error = new Error(403, e.getMessage(),request.getServletPath());
         return error;
     }
+
+
 }

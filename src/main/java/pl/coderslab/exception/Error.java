@@ -1,27 +1,28 @@
 package pl.coderslab.exception;
 
+import org.springframework.http.HttpStatus;
+
 import java.util.Date;
 
 public class Error {
-    private int status;
+    private int httpStatus;
     private String message;
     private long timestamp;
     private String path;
 
-    public Error(int status, String message, String path) {
-        super();
-        this.status = status;
+    public Error(int httpStatus, String message, String path) {
+        this.httpStatus = httpStatus;
         this.message = message;
-        this.path = path;
         this.timestamp = new Date().getTime();
+        this.path = path;
     }
 
-    public int getStatus() {
-        return status;
+    public int getHttpStatus() {
+        return httpStatus;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setHttpStatus(int httpStatus) {
+        this.httpStatus = httpStatus;
     }
 
     public String getMessage() {
